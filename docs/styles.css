@@ -61,7 +61,7 @@ body {
   background-color: var(--color-bg);
   color: var(--color-fg);
   font-family: var(--font-family);
-  font-size: 0.875rem;
+  font-size: 1rem;
   user-select: none;
 }
 
@@ -92,7 +92,7 @@ body {
 
 .header__title {
   margin: 0;
-  font-size: 1em;
+  font-size: 1rem;
   font-weight: 400;
 }
 
