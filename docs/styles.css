@@ -13,6 +13,7 @@
   /* Colors */
   --color-bg: #fff;
   --color-fg: #000;
+  --color-focus: #3b82f6;
   --color-hair: #5c2f13;
   --color-tshirt: #0e1d32;
   --color-trousers: #1e3f98;
@@ -83,7 +84,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--gutter);
+  flex-wrap: wrap;
+  gap: calc(var(--gutter) * 0.5) var(--gutter);
   padding-block-start: var(--gutter);
   padding-inline: var(--gutter);
 }
@@ -131,29 +133,14 @@ body {
   padding-inline: var(--gutter);
 }
 
-.footer__nav {
-  --_gap: 0.5rem;
-}
-
 .footer__nav-list {
   display: flex;
-  gap: var(--_gap);
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
   list-style: none;
   padding: 0;
   margin: 0;
-}
-
-.footer__nav-item {
-  display: flex;
-  align-items: center;
-  gap: var(--_gap);
-
-  & + .footer__nav-item {
-    &::before {
-      content: "▪";
-      font-size: 0.75em;
-    }
-  }
 }
 
 .footer__nav-link {
@@ -183,7 +170,7 @@ body {
 ====================== */
 
 .scene {
-  --canvas-base-unit: 1rem;
+  --canvas-base-unit: min(1rem, 2.5vh);
   --canvas-width: 7;
   --canvas-height: 23;
   --canvas-depth: 5;
@@ -512,8 +499,30 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
+  padding: var(--canvas-base-unit);
   color: var(--color-speak-bubble-fg);
   text-align: center;
-  font-size: 0.75rem;
+  font-size: calc(var(--canvas-base-unit) * 0.75);
+}
+
+/* ======================
+   Focus
+====================== */
+
+@supports selector(:focus-visible) {
+  :where(a, button, input, select, textarea, summary, [role="button"]) {
+    &:focus-visible {
+      outline: 2px solid var(--color-focus);
+      outline-offset: 2px;
+    }
+  }
+}
+
+@supports not selector(:focus-visible) {
+  :where(a, button, input, select, textarea, summary, [role="button"]) {
+    &:focus-visible {
+      outline: 2px solid var(--color-focus);
+      outline-offset: 2px;
+    }
+  }
 }
