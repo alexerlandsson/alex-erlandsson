@@ -1,6 +1,8 @@
 # Alex Erlandsson
 
-This is the repository for https://alexerlandsson.com hosted with GitHub Pages.
+This is the repository for https://alexerlandsson.com hosted with *GitHub Pages*.
+
+![Screenshot](assets/screenshot.png)
 
 ## GitHub Pages
 
