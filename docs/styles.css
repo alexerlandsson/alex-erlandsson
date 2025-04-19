@@ -1,3 +1,7 @@
+/* ======================
+   Global variables
+====================== */
+
 :root {
   color-scheme: light dark;
 
@@ -6,36 +10,29 @@
   --font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo,
     Consolas, "DejaVu Sans Mono", monospace;
 
-  /* 3D Model Layout */
-  --base-unit: 1rem;
-  --scene-perspective: 32rem;
-
-  /* 3D Model Canvas */
-  --canvas-width: 7;
-  --canvas-height: 23;
-  --canvas-depth: 5;
-
   /* Colors */
   --color-bg: #fff;
   --color-fg: #000;
-  --color-canvas: #000;
   --color-hair: #5c2f13;
   --color-tshirt: #0e1d32;
   --color-trousers: #1e3f98;
-  --color-sneakers-top: #998f7b;
-  --color-sneakers-bottom: #fff;
+  --color-sneakers-top: #7a7873;
+  --color-sneakers-bottom: #dedede;
   --color-skin: #d6b098;
-  --color-speak-bubble-bg: #fff;
+  --color-speak-bubble-bg: #f1f1f1;
   --color-speak-bubble-fg: #000;
 
   @media (prefers-color-scheme: dark) {
     --color-bg: #000;
     --color-fg: #fff;
-    --color-canvas: #fff;
+    --color-sneakers-bottom: #fff;
+    --color-speak-bubble-bg: #fff;
   }
 }
 
-/* Global */
+/* ======================
+   Base styling
+====================== */
 
 *,
 *::before,
@@ -53,6 +50,9 @@ body {
 
 html {
   font-size: 100%;
+  text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
@@ -64,7 +64,9 @@ body {
   user-select: none;
 }
 
-/* Root */
+/* ======================
+   Root
+====================== */
 
 .root {
   display: flex;
@@ -72,7 +74,9 @@ body {
   height: 100%;
 }
 
-/* Header */
+/* ======================
+   Header
+====================== */
 
 .header {
   flex-shrink: 0;
@@ -114,7 +118,9 @@ body {
   }
 }
 
-/* Footer */
+/* ======================
+   Footer
+====================== */
 
 .footer {
   flex-shrink: 0;
@@ -144,7 +150,8 @@ body {
 
   & + .footer__nav-item {
     &::before {
-      content: "•";
+      content: "▪";
+      font-size: 0.75em;
     }
   }
 }
@@ -159,7 +166,9 @@ body {
   }
 }
 
-/* Main */
+/* ======================
+   Main
+====================== */
 
 .main {
   flex: 1 1 auto;
@@ -169,16 +178,23 @@ body {
   height: 100%;
 }
 
-/* Scene */
+/* ======================
+   Scene
+====================== */
 
 .scene {
-  --_canvas-width: calc(var(--canvas-width) * var(--base-unit));
-  --_canvas-height: calc(var(--canvas-height) * var(--base-unit));
-  --_canvas-depth: calc(var(--canvas-depth) * var(--base-unit));
+  --canvas-base-unit: 1rem;
+  --canvas-width: 7;
+  --canvas-height: 23;
+  --canvas-depth: 5;
+
+  --_canvas-width: calc(var(--canvas-width) * var(--canvas-base-unit));
+  --_canvas-height: calc(var(--canvas-height) * var(--canvas-base-unit));
+  --_canvas-depth: calc(var(--canvas-depth) * var(--canvas-base-unit));
 
   width: var(--_canvas-width);
   height: var(--_canvas-height);
-  perspective: var(--scene-perspective, 500px);
+  perspective: 32rem;
   user-select: none;
   cursor: grab;
 
@@ -187,7 +203,9 @@ body {
   }
 }
 
-/* Canvas */
+/* ======================
+   Canvas
+====================== */
 
 .canvas {
   position: relative;
@@ -197,69 +215,17 @@ body {
   translate: 0 0 calc(var(--_canvas-depth) * -0.5);
 }
 
-.canvas--hide .canvas__face {
-  display: none;
-}
-
-.canvas__face {
-  position: absolute;
-  border: 2px solid var(--color-canvas);
-  pointer-events: none;
-}
-
-.canvas__face--front,
-.canvas__face--back {
-  width: var(--_canvas-width);
-  height: var(--_canvas-height);
-}
-
-.canvas__face--left,
-.canvas__face--right {
-  width: var(--_canvas-depth);
-  height: var(--_canvas-height);
-  left: calc(var(--_canvas-width) * 0.5 - var(--_canvas-depth) * 0.5);
-}
-
-.canvas__face--top,
-.canvas__face--bottom {
-  width: var(--_canvas-width);
-  height: var(--_canvas-depth);
-  top: calc(var(--_canvas-height) * 0.5 - var(--_canvas-depth) * 0.5);
-}
-
-.canvas__face--front {
-  transform: rotateY(0deg) translateZ(calc(var(--_canvas-depth) * 0.5));
-}
-
-.canvas__face--back {
-  transform: rotateY(180deg) translateZ(calc(var(--_canvas-depth) * 0.5));
-}
-
-.canvas__face--left {
-  transform: rotateY(-90deg) translateZ(calc(var(--_canvas-width) * 0.5));
-}
-
-.canvas__face--right {
-  transform: rotateY(90deg) translateZ(calc(var(--_canvas-width) * 0.5));
-}
-
-.canvas__face--top {
-  transform: rotateX(90deg) translateZ(calc(var(--_canvas-height) * 0.5));
-}
-
-.canvas__face--bottom {
-  transform: rotateX(-90deg) translateZ(calc(var(--_canvas-height) * 0.5));
-}
-
-/* Rect */
+/* ======================
+   Rect
+====================== */
 
 .rect {
-  --_w: calc(var(--w, 1) * var(--base-unit)); /* Width */
-  --_h: calc(var(--h, 1) * var(--base-unit)); /* Height */
-  --_d: calc(var(--d, 1) * var(--base-unit)); /* Depth */
-  --_x: calc(var(--x, 0) * var(--base-unit)); /* Pos X */
-  --_y: calc(var(--y, 0) * var(--base-unit)); /* Pos Y */
-  --_z: calc(var(--z, 0) * var(--base-unit)); /* Pos Z */
+  --_w: calc(var(--w, 1) * var(--canvas-base-unit)); /* Width */
+  --_h: calc(var(--h, 1) * var(--canvas-base-unit)); /* Height */
+  --_d: calc(var(--d, 1) * var(--canvas-base-unit)); /* Depth */
+  --_x: calc(var(--x, 0) * var(--canvas-base-unit)); /* Pos X */
+  --_y: calc(var(--y, 0) * var(--canvas-base-unit)); /* Pos Y */
+  --_z: calc(var(--z, 0) * var(--canvas-base-unit)); /* Pos Z */
   --_c: var(--c); /* Color */
 
   position: absolute;
@@ -322,23 +288,9 @@ body {
   transform: rotateX(-90deg) translateZ(calc(var(--_h) * 0.5));
 }
 
-/* GitHub Link */
-
-.github-link {
-  position: fixed;
-  bottom: 1.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  color: currentColor;
-  text-decoration: none;
-  font-size: 0.875rem;
-
-  &:hover {
-    text-decoration: underline;
-  }
-}
-
-/* Avatar */
+/* ======================
+   Avatar
+====================== */
 
 /* Avatar: Hair */
 

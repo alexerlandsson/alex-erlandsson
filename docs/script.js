@@ -1,6 +1,23 @@
 document.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('canvas');
   
+  // Randomize speech bubble text on load
+  const randomizeSpeechBubble = () => {
+    const speechTexts = [
+      'Hi!',
+      'I love CSS',
+      'I work as a front-end dev'
+    ];
+    const randomText = speechTexts[Math.floor(Math.random() * speechTexts.length)];
+    const speechBubbleContent = document.querySelector('.avatar__speak-bubble--content');
+    if (speechBubbleContent) {
+      speechBubbleContent.textContent = randomText;
+    }
+  };
+  
+  // Call the function to set random text
+  randomizeSpeechBubble();
+  
   // Current rotation values
   let rotationX = 0;
   let rotationY = 0;
