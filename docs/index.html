@@ -25,6 +25,8 @@
     <link rel="image_src" href="https://alexerlandsson.com/assets/images/og-thumbnail.png" />
     <meta property="og:title" content="Alex Erlandsson – Front-end Developer" />
     <meta property="og:site_name" content="Alex Erlandsson" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_US" />
     <meta property="og:image" content="https://alexerlandsson.com/assets/images/og-thumbnail.png" />
     <meta property="og:url" content="https://alexerlandsson.com" />
     <meta
@@ -38,13 +40,13 @@
   </head>
   <body>
     <div class="root" role="presentation">
-      <header class="header">
+      <header class="header" role="banner">
         <h1 class="header__title">Alex Erlandsson</h1>
       </header>
 
-      <main class="main">
+      <main class="main" role="main">
         <div class="scene" role="presentation">
-          <div class="canvas" id="canvas" role="presentation">
+          <div class="canvas" id="canvas" role="img" aria-label="3D representation of Alex Erlandsson">
             <div class="rect avatar__hair avatar__hair--top" aria-hidden="true">
               <div class="rect__face rect__face--front"></div>
               <div class="rect__face rect__face--back"></div>
