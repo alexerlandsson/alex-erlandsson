@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let momentumX = 0;
   let momentumY = 0;
   let lastDragTime = 0;
-  const FRICTION = 0.8; // Friction factor (0-1): higher means less friction
+  const FRICTION = 0.85; // Friction factor (0-1): higher means less friction
   const MOMENTUM_THRESHOLD = 0.1; // Stop rotation when momentum falls below this
   let animationFrameId = null;
   
