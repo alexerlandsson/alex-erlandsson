@@ -23,10 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const SCALE_FACTOR_Y = 5; // Scale factor for better feel on the Y-axis
   let animationFrameId = null;
   
-  // For multi-touch detection
-  let touchPointsCount = 0;
-  let activePointerIds = new Set();
-  
   // Function to update the model rotation
   function updateModelRotation() {
     canvas.style.transform = `rotateX(${rotationY}deg) rotateY(${rotationX}deg)`;
@@ -56,10 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   
   // Start dragging
-  function handleDragStart(x, y, pointerId = null) {
-    // Don't start dragging if multiple touch/pointer points are active
-    if (touchPointsCount > 1 || activePointerIds.size > 1) return;
-    
+  function handleDragStart(x, y) {
     // Stop any ongoing momentum animation
     if (animationFrameId !== null) {
       cancelAnimationFrame(animationFrameId);
@@ -77,32 +70,17 @@ document.addEventListener('DOMContentLoaded', () => {
     if (window.PointerEvent) {
       document.addEventListener('pointermove', handleDragMove);
       document.addEventListener('pointerup', handleDragEnd);
-      document.addEventListener('pointercancel', handleDragEnd);
     } else {
       document.addEventListener('mousemove', handleDragMove);
       document.addEventListener('mouseup', handleDragEnd);
-      document.addEventListener('touchmove', handleDragMove, { passive: false });
+      document.addEventListener('touchmove', handleDragMove);
       document.addEventListener('touchend', handleDragEnd);
-      document.addEventListener('touchcancel', handleDragEnd);
     }
   }
   
   // During dragging
   function handleDragMove(event) {
-    // Immediately end dragging if we detect multiple touches
-    if ((event.touches && event.touches.length > 1) || 
-        touchPointsCount > 1 || 
-        activePointerIds.size > 1) {
-      handleDragEnd();
-      return;
-    }
-    
     if (!isDragging) return;
-    
-    // Prevent default behavior like scrolling
-    if (event.cancelable !== false) {
-      event.preventDefault();
-    }
     
     let currentX, currentY;
     const currentTime = Date.now();
@@ -110,6 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Get current pointer/touch coordinates
     if (event.type === 'touchmove') {
+      event.preventDefault();
       currentX = event.touches[0].clientX;
       currentY = event.touches[0].clientY;
     } else {
@@ -142,8 +121,6 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // End dragging
   function handleDragEnd() {
-    if (!isDragging) return;
-    
     isDragging = false;
     
     // Start momentum animation
@@ -155,82 +132,32 @@ document.addEventListener('DOMContentLoaded', () => {
     if (window.PointerEvent) {
       document.removeEventListener('pointermove', handleDragMove);
       document.removeEventListener('pointerup', handleDragEnd);
-      document.removeEventListener('pointercancel', handleDragEnd);
     } else {
       document.removeEventListener('mousemove', handleDragMove);
       document.removeEventListener('mouseup', handleDragEnd);
       document.removeEventListener('touchmove', handleDragMove);
       document.removeEventListener('touchend', handleDragEnd);
-      document.removeEventListener('touchcancel', handleDragEnd);
     }
   }
   
-  // Handle touch events for browsers without pointer events
-  function handleTouchStart(event) {
-    touchPointsCount = event.touches.length;
-    
-    // End any existing drag if multiple touches detected
-    if (touchPointsCount > 1) {
-      if (isDragging) {
-        handleDragEnd();
-      }
-      return;
-    }
-    
-    // Only start dragging for single touch
-    if (touchPointsCount === 1) {
-      handleDragStart(event.touches[0].clientX, event.touches[0].clientY);
-    }
-  }
-  
-  function handleTouchChange(event) {
-    touchPointsCount = event.touches.length;
-    
-    // If dragging but now have multiple touches, stop dragging
-    if (isDragging && touchPointsCount > 1) {
-      handleDragEnd();
-    }
-  }
-  
-  // Handle pointer events for modern browsers
-  function handlePointerDown(event) {
-    // Track this pointer
-    activePointerIds.add(event.pointerId);
-    
-    // End any existing drag if multiple pointers detected
-    if (activePointerIds.size > 1) {
-      if (isDragging) {
-        handleDragEnd();
-      }
-      return;
-    }
-    
-    // Only start dragging for single pointer (mouse or first touch)
-    if (activePointerIds.size === 1) {
-      handleDragStart(event.clientX, event.clientY, event.pointerId);
-    }
-  }
-  
-  function handlePointerUp(event) {
-    // Stop tracking this pointer
-    activePointerIds.delete(event.pointerId);
-  }
-  
-  // Set up event listeners
+  // Set up event listeners for drag start on the entire document
   if (window.PointerEvent) {
     // Modern browsers with pointer events
-    document.addEventListener('pointerdown', handlePointerDown);
-    document.addEventListener('pointerup', handlePointerUp);
-    document.addEventListener('pointercancel', handlePointerUp);
+    document.addEventListener('pointerdown', (event) => {
+      handleDragStart(event.clientX, event.clientY);
+    });
   } else {
     // Fallback for older browsers
     document.addEventListener('mousedown', (event) => {
       handleDragStart(event.clientX, event.clientY);
     });
     
-    document.addEventListener('touchstart', handleTouchStart, { passive: false });
-    document.addEventListener('touchend', handleTouchChange);
-    document.addEventListener('touchcancel', handleTouchChange);
+    document.addEventListener('touchstart', (event) => {
+      if (event.touches.length > 0) {
+        event.preventDefault();
+        handleDragStart(event.touches[0].clientX, event.touches[0].clientY);
+      }
+    });
   }
   
   // Initial render of the model
