@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Calculate momentum (speed = distance / time)
     if (elapsed > 0) {
       momentumX = deltaX / elapsed * 15; // Scale factor for better feel
-      momentumY = -deltaY / elapsed * 15; // Negative because Y rotation is inverted
+      momentumY = -deltaY / elapsed * 5; // Negative because Y rotation is inverted
     }
     
     // Update rotation (note that horizontal movement affects Y-axis rotation and vice versa)
