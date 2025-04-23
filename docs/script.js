@@ -23,6 +23,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const SCALE_FACTOR_Y = 5; // Scale factor for better feel on the Y-axis
   let animationFrameId = null;
   
+  // Track touch points to detect multi-touch
+  let activeTouches = 0;
+  
   // Function to update the model rotation
   function updateModelRotation() {
     canvas.style.transform = `rotateX(${rotationY}deg) rotateY(${rotationX}deg)`;
@@ -53,6 +56,9 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Start dragging
   function handleDragStart(x, y) {
+    // Don't start dragging if multiple touches are active
+    if (activeTouches > 1) return;
+    
     // Stop any ongoing momentum animation
     if (animationFrameId !== null) {
       cancelAnimationFrame(animationFrameId);
@@ -80,6 +86,12 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // During dragging
   function handleDragMove(event) {
+    // Cancel dragging if multiple touches detected
+    if (event.type === 'touchmove' && event.touches.length > 1) {
+      handleDragEnd();
+      return;
+    }
+    
     if (!isDragging) return;
     
     let currentX, currentY;
@@ -140,6 +152,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
   
+  // Track touch count
+  function handleTouchStart(event) {
+    activeTouches = event.touches.length;
+    
+    // Only start dragging for single touch
+    if (activeTouches === 1) {
+      handleDragStart(event.touches[0].clientX, event.touches[0].clientY);
+    } else if (isDragging) {
+      // Cancel dragging if it was in progress and another finger touched
+      handleDragEnd();
+    }
+  }
+  
+  function handleTouchEnd(event) {
+    activeTouches = event.touches.length;
+  }
+  
   // Set up event listeners for drag start on the entire document
   if (window.PointerEvent) {
     // Modern browsers with pointer events
@@ -152,12 +181,10 @@ document.addEventListener('DOMContentLoaded', () => {
       handleDragStart(event.clientX, event.clientY);
     });
     
-    document.addEventListener('touchstart', (event) => {
-      if (event.touches.length > 0) {
-        event.preventDefault();
-        handleDragStart(event.touches[0].clientX, event.touches[0].clientY);
-      }
-    });
+    // Replace the touchstart listener with our enhanced version
+    document.addEventListener('touchstart', handleTouchStart);
+    document.addEventListener('touchend', handleTouchEnd);
+    document.addEventListener('touchcancel', handleTouchEnd);
   }
   
   // Initial render of the model
