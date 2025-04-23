@@ -19,6 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
   let lastDragTime = 0;
   const FRICTION = 0.85; // Friction factor (0-1): higher means less friction
   const MOMENTUM_THRESHOLD = 0.1; // Stop rotation when momentum falls below this
+  const SCALE_FACTOR_X = 15; // Scale factor for better feel on the X-axis
+  const SCALE_FACTOR_Y = 5; // Scale factor for better feel on the Y-axis
   let animationFrameId = null;
   
   // Function to update the model rotation
@@ -100,8 +102,8 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Calculate momentum (speed = distance / time)
     if (elapsed > 0) {
-      momentumX = deltaX / elapsed * 15; // Scale factor for better feel
-      momentumY = -deltaY / elapsed * 5; // Negative because Y rotation is inverted
+      momentumX = deltaX / elapsed * SCALE_FACTOR_X;
+      momentumY = -deltaY / elapsed * SCALE_FACTOR_Y; // Negative because Y rotation is inverted
     }
     
     // Update rotation (note that horizontal movement affects Y-axis rotation and vice versa)
