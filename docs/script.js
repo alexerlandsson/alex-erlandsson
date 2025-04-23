@@ -13,16 +13,56 @@ document.addEventListener('DOMContentLoaded', () => {
   // Sensitivity factor for rotation (adjust as needed)
   const ROTATION_SENSITIVITY = 0.5;
   
+  // Momentum variables
+  let momentumX = 0;
+  let momentumY = 0;
+  let lastDragTime = 0;
+  const FRICTION = 0.9; // Friction factor (0-1): higher means less friction
+  const MOMENTUM_THRESHOLD = 0.1; // Stop rotation when momentum falls below this
+  let animationFrameId = null;
+  
   // Function to update the model rotation
   function updateModelRotation() {
     canvas.style.transform = `rotateX(${rotationY}deg) rotateY(${rotationX}deg)`;
   }
   
+  // Apply momentum and gradually slow down
+  function applyMomentum() {
+    if (Math.abs(momentumX) < MOMENTUM_THRESHOLD && Math.abs(momentumY) < MOMENTUM_THRESHOLD) {
+      // Stop animation when momentum is very low
+      animationFrameId = null;
+      return;
+    }
+    
+    // Apply momentum to rotation
+    rotationX += momentumX;
+    rotationY += momentumY;
+    
+    // Apply friction to gradually reduce momentum
+    momentumX *= FRICTION;
+    momentumY *= FRICTION;
+    
+    // Update the model's rotation
+    updateModelRotation();
+    
+    // Continue animation
+    animationFrameId = requestAnimationFrame(applyMomentum);
+  }
+  
   // Start dragging
   function handleDragStart(x, y) {
+    // Stop any ongoing momentum animation
+    if (animationFrameId !== null) {
+      cancelAnimationFrame(animationFrameId);
+      animationFrameId = null;
+    }
+    
     isDragging = true;
     previousMouseX = x;
     previousMouseY = y;
+    lastDragTime = Date.now();
+    momentumX = 0;
+    momentumY = 0;
     
     // Add event listeners for move and end events
     if (window.PointerEvent) {
@@ -41,6 +81,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!isDragging) return;
     
     let currentX, currentY;
+    const currentTime = Date.now();
+    const elapsed = currentTime - lastDragTime;
     
     // Get current pointer/touch coordinates
     if (event.type === 'touchmove') {
@@ -56,23 +98,33 @@ document.addEventListener('DOMContentLoaded', () => {
     const deltaX = currentX - previousMouseX;
     const deltaY = currentY - previousMouseY;
     
+    // Calculate momentum (speed = distance / time)
+    if (elapsed > 0) {
+      momentumX = deltaX / elapsed * 15; // Scale factor for better feel
+      momentumY = -deltaY / elapsed * 15; // Negative because Y rotation is inverted
+    }
+    
     // Update rotation (note that horizontal movement affects Y-axis rotation and vice versa)
     rotationX += deltaX * ROTATION_SENSITIVITY;
     rotationY -= deltaY * ROTATION_SENSITIVITY;
     
-    // No limit on rotation - this allows continuous rotation in any direction
-    
     // Update the model's rotation
     updateModelRotation();
     
-    // Save current position for next move event
+    // Save current position and time for next move event
     previousMouseX = currentX;
     previousMouseY = currentY;
+    lastDragTime = currentTime;
   }
   
   // End dragging
   function handleDragEnd() {
     isDragging = false;
+    
+    // Start momentum animation
+    if (Math.abs(momentumX) > MOMENTUM_THRESHOLD || Math.abs(momentumY) > MOMENTUM_THRESHOLD) {
+      animationFrameId = requestAnimationFrame(applyMomentum);
+    }
     
     // Remove event listeners
     if (window.PointerEvent) {
