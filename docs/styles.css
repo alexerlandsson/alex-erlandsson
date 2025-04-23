@@ -526,3 +526,23 @@ body {
     }
   }
 }
+
+
+
+
+.work {
+  min-height: 100%;
+  padding: 3rem 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 24px;
+}
+
+.work__intro {
+  grid-column: 1 / 3;
+}
+
+.work__item {
+  grid-column: 2;
+}
+
