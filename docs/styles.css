@@ -211,6 +211,7 @@ body {
   height: 100%;
   transform-style: preserve-3d;
   translate: 0 0 calc(var(--_canvas-depth) * -0.5);
+  margin: 0;
 }
 
 /* ======================
