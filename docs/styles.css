@@ -7,12 +7,12 @@
 
   /* Base */
   --gutter: 1.5rem;
-  --font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo,
-    Consolas, "DejaVu Sans Mono", monospace;
+  --font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, "DejaVu Sans Mono", monospace;
 
   /* Colors */
   --color-bg: #fff;
   --color-fg: #000;
+  --color-fg-muted: #757575;
   --color-focus: #3b82f6;
   --color-hair: #5c2f13;
   --color-tshirt: #0e1d32;
@@ -91,12 +91,13 @@ body {
 ====================== */
 
 .header {
+  --_header-gap: 0.5rem;
+  
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   flex-wrap: wrap;
-  gap: calc(var(--gutter) * 0.5) var(--gutter);
+  gap: var(--_header-gap);
   padding-block-start: var(--gutter);
   padding-inline: var(--gutter);
 }
@@ -107,24 +108,19 @@ body {
   font-weight: 400;
 }
 
-.header__list {
+.header__nav {
   display: flex;
-  gap: 1rem;
-  list-style: none;
-  padding: 0;
-  margin: 0;
+  align-items: center;
+  gap: var(--_header-gap);
+
+  &::before {
+    content: "/";
+  }
 }
 
-.header__button {
-  background-color: transparent;
-  padding: 0;
-  margin: 0;
-  border: none;
-  border-radius: 0;
-  font-size: 1em;
-  font-family: var(--font-family);
-  text-transform: uppercase;
-  cursor: pointer;
+.header__link {
+  color: var(--color-fg-muted);
+  text-decoration: none;
 
   &:hover {
     text-decoration: underline;
@@ -231,11 +227,7 @@ body {
   transform-style: preserve-3d;
   width: var(--_w);
   height: var(--_h);
-  transform: translate3d(
-    var(--_x),
-    var(--_y),
-    calc(var(--_canvas-depth) * 0.5 - var(--_d) * 0.5 - var(--_z))
-  );
+  transform: translate3d(var(--_x), var(--_y), calc(var(--_canvas-depth) * 0.5 - var(--_d) * 0.5 - var(--_z)));
 }
 
 .rect__face {
