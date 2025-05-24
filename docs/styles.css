@@ -17,8 +17,8 @@
   --color-hair: #5c2f13;
   --color-tshirt: #0e1d32;
   --color-trousers: #1e3f98;
-  --color-sneakers-top: #7a7873;
-  --color-sneakers-bottom: #dedede;
+  --color-shoes-top: #7a7873;
+  --color-shoes-bottom: #dedede;
   --color-skin: #d6b098;
   --color-speak-bubble-bg: #f1f1f1;
   --color-speak-bubble-fg: #000;
@@ -26,7 +26,7 @@
   @media (prefers-color-scheme: dark) {
     --color-bg: #000;
     --color-fg: #fff;
-    --color-sneakers-bottom: #fff;
+    --color-shoes-bottom: #fff;
     --color-speak-bubble-bg: #fff;
   }
 }
@@ -400,22 +400,20 @@ body {
   --z: 1;
 }
 
-.avatar__tshirt--arm-left {
+.avatar__tshirt--arm {
   --w: 1;
   --h: 3;
   --d: 2;
-  --x: 6;
   --y: 6;
   --z: 2;
 }
 
+.avatar__tshirt--arm-left {
+  --x: 6;
+}
+
 .avatar__tshirt--arm-right {
-  --w: 1;
-  --h: 3;
-  --d: 2;
   --x: 0;
-  --y: 6;
-  --z: 2;
 }
 
 /* Avatar: Trousers */
@@ -450,30 +448,30 @@ body {
   --x: 1;
 }
 
-/* Avatar: Sneakers */
+/* Avatar: Shoes */
 
-.avatar__sneakers {
+.avatar__shoes {
   --w: 2;
   --h: 1;
   --d: 3;
   --z: 1;
 }
 
-.avatar__sneakers--top {
+.avatar__shoes--top {
   --y: 21;
-  --c: var(--color-sneakers-top);
+  --c: var(--color-shoes-top);
 }
 
-.avatar__sneakers--bottom {
+.avatar__shoes--bottom {
   --y: 22;
-  --c: var(--color-sneakers-bottom);
+  --c: var(--color-shoes-bottom);
 }
 
-.avatar__sneakers--left {
+.avatar__shoes--left {
   --x: 4;
 }
 
-.avatar__sneakers--right {
+.avatar__shoes--right {
   --x: 1;
 }
 
