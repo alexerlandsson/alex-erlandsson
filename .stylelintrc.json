@@ -1,0 +1,21 @@
+{
+  "extends": "stylelint-config-standard",
+  "plugins": [
+    "stylelint-selector-bem-pattern"
+  ],
+  "rules": {
+    "plugin/selector-bem-pattern": {
+      "preset": "bem"
+    },
+    "selector-class-pattern": null,
+    "value-keyword-case": [
+      "lower",
+      {
+        "ignoreProperties": ["font", "font-family"],
+        "ignoreFunctions": ["var"],
+        "camelCaseSvgKeywords": true
+      }
+    ],
+    "custom-property-pattern": "^[-_]?[a-zA-Z0-9][-_a-zA-Z0-9]*(?:--[a-zA-Z0-9]+)*$"
+  }
+}
