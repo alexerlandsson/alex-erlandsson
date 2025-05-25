@@ -4,26 +4,36 @@ This is the repository for my personal website https://alexerlandsson.com hosted
 
 ![Screenshot](assets/screenshot.png)
 
-## Work in this repository
+## Overviwe
 
-This is a very simple website that is built using vanilla HTML, CSS and JavaScript. It is a static site with no backend or server-side code. No build tools, no frameworks and no libraries are used.
+This is a very simple, personal website built with vanilla HTML, CSS, and JavaScript. It is a static site with no backend or build tools—completely free of frameworks and libraries.
 
-### Code formatting
+## Formatting & Linting
 
-This project uses [Prettier](https://prettier.io/) to format the code. You can run it using the following command:
+This project follows consistent code formatting and style guidelines using industry-standard tools. These tools are configured to run automatically via [husky](https://typicode.github.io/husky/) pre-commit hooks to maintain code quality.
+
+### Code Formatting
+
+[Prettier](https://prettier.io/) is used for consistent formatting across all files.
 
 ```bash
 npm run format
 ```
 
-### CSS linting
+Alternatively, you can use this script to check fromatting without making changes:
 
-This project uses [stylelint](https://stylelint.io/) to lint the CSS. You can run it using the following command:
+```bash
+npm run format:check
+```
+
+### CSS Linting
+
+[stylelint](https://stylelint.io/) ensures CSS code quality and consistency.
 
 ```bash
 npm run lint:css
 ```
 
-### GitHub Pages
+## Deployment
 
-This project is hosted using _GitHub Pages_ and being built from the `/docs` folder in the `master` branch. There are no CI/CD jobs building the project since everything is built using vanilla HTML, CSS and JavaScript.
+Hosted via **GitHub Pages**, built from the `/docs` directory on the `master` branch. No CI/CD pipeline is used.
