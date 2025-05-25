@@ -24,13 +24,25 @@
   "scripts": {
     "lint:css": "stylelint 'docs/**/*.css'",
     "lint:css:fix": "stylelint 'docs/**/*.css' --fix",
+    "lint": "npm run lint:css",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "prepare": "husky"
   },
   "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^16.0.0",
     "prettier": "^3.5.3",
     "stylelint": "^16.19.1",
     "stylelint-config-standard": "^38.0.0",
     "stylelint-selector-bem-pattern": "^4.0.1"
+  },
+  "lint-staged": {
+    "docs/**/*.css": [
+      "stylelint"
+    ],
+    "**/*.{js,css,html,json,md}": [
+      "prettier --check"
+    ]
   }
 }
