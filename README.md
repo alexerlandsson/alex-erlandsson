@@ -2,7 +2,7 @@
 
 This is the repository for my personal website https://alexerlandsson.com hosted with _GitHub Pages_.
 
-![Screenshot](assets/screenshot.png)
+![Screenshot of the site](assets/screenshot.png)
 
 ## Overviwe
 
