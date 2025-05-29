@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Sensitivity factor for rotation (adjust as needed)
   const ROTATION_SENSITIVITY = 0.5;
-  const KEY_ROTATION_STEP = 5;
+  const KEY_ROTATION_STEP = 22.5;
 
   // Momentum variables
   let momentumX = 0;
@@ -165,10 +165,10 @@ document.addEventListener("DOMContentLoaded", () => {
   function handleKey(event) {
     switch (event.key) {
       case "ArrowUp":
-        rotationY -= KEY_ROTATION_STEP;
+        rotationY += KEY_ROTATION_STEP;
         break;
       case "ArrowDown":
-        rotationY += KEY_ROTATION_STEP;
+        rotationY -= KEY_ROTATION_STEP;
         break;
       case "ArrowLeft":
         rotationX -= KEY_ROTATION_STEP;
