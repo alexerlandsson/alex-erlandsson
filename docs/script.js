@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Sensitivity factor for rotation (adjust as needed)
   const ROTATION_SENSITIVITY = 0.5;
+  const KEY_ROTATION_STEP = 22.5;
 
   // Momentum variables
   let momentumX = 0;
@@ -159,6 +160,29 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+
+  // Keyboard controls for rotation
+  function handleKey(event) {
+    switch (event.key) {
+      case "ArrowUp":
+        rotationY += KEY_ROTATION_STEP;
+        break;
+      case "ArrowDown":
+        rotationY -= KEY_ROTATION_STEP;
+        break;
+      case "ArrowLeft":
+        rotationX -= KEY_ROTATION_STEP;
+        break;
+      case "ArrowRight":
+        rotationX += KEY_ROTATION_STEP;
+        break;
+      default:
+        return;
+    }
+    updateModelRotation();
+  }
+
+  document.addEventListener("keydown", handleKey);
 
   // Initial render of the model
   updateModelRotation();
