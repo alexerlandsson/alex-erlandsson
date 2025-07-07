@@ -1,93 +1,133 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const canvas = document.getElementById("canvas");
+/**
+ * 3D Model Rotation Controller
+ * Handles mouse/touch drag rotation with momentum and keyboard controls
+ */
+class ModelRotationController {
+  constructor(canvas, options = {}) {
+    this.canvas = canvas;
 
-  // Current rotation values
-  let rotationX = 0;
-  let rotationY = 0;
+    // Configuration
+    this.config = {
+      rotationSensitivity: options.rotationSensitivity || 0.5,
+      keyRotationStep: options.keyRotationStep || 22.5,
+      friction: options.friction || 0.85,
+      momentumThreshold: options.momentumThreshold || 0.1,
+      scaleFactorX: options.scaleFactorX || 15,
+      scaleFactorY: options.scaleFactorY || 5,
+      ...options,
+    };
 
-  // For tracking mouse/touch movement
-  let isDragging = false;
-  let previousMouseX = 0;
-  let previousMouseY = 0;
+    // State
+    this.rotation = { x: 0, y: 0 };
+    this.isDragging = false;
+    this.previousPointer = { x: 0, y: 0 };
+    this.momentum = { x: 0, y: 0 };
+    this.lastDragTime = 0;
+    this.animationFrameId = null;
 
-  // Sensitivity factor for rotation (adjust as needed)
-  const ROTATION_SENSITIVITY = 0.5;
-  const KEY_ROTATION_STEP = 22.5;
+    // Bind methods to preserve context
+    this.handleDragStart = this.handleDragStart.bind(this);
+    this.handleDragMove = this.handleDragMove.bind(this);
+    this.handleDragEnd = this.handleDragEnd.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.applyMomentum = this.applyMomentum.bind(this);
 
-  // Momentum variables
-  let momentumX = 0;
-  let momentumY = 0;
-  let lastDragTime = 0;
-  const FRICTION = 0.85; // Friction factor (0-1): higher means less friction
-  const MOMENTUM_THRESHOLD = 0.1; // Stop rotation when momentum falls below this
-  const SCALE_FACTOR_X = 15; // Scale factor for better feel on the X-axis
-  const SCALE_FACTOR_Y = 5; // Scale factor for better feel on the Y-axis
-  let animationFrameId = null;
-
-  // Function to update the model rotation
-  function updateModelRotation() {
-    canvas.style.transform = `rotateX(${rotationY}deg) rotateY(${rotationX}deg)`;
+    this.init();
   }
 
-  // Apply momentum and gradually slow down
-  function applyMomentum() {
-    if (Math.abs(momentumX) < MOMENTUM_THRESHOLD && Math.abs(momentumY) < MOMENTUM_THRESHOLD) {
-      // Stop animation when momentum is very low
-      animationFrameId = null;
-      return;
-    }
-
-    // Apply momentum to rotation
-    rotationX += momentumX;
-    rotationY += momentumY;
-
-    // Apply friction to gradually reduce momentum
-    momentumX *= FRICTION;
-    momentumY *= FRICTION;
-
-    // Update the model's rotation
-    updateModelRotation();
-
-    // Continue animation
-    animationFrameId = requestAnimationFrame(applyMomentum);
+  /**
+   * Initialize the controller
+   */
+  init() {
+    this.setupEventListeners();
+    this.updateModelRotation();
   }
 
-  // Start dragging
-  function handleDragStart(x, y) {
-    // Stop any ongoing momentum animation
-    if (animationFrameId !== null) {
-      cancelAnimationFrame(animationFrameId);
-      animationFrameId = null;
-    }
-
-    isDragging = true;
-    previousMouseX = x;
-    previousMouseY = y;
-    lastDragTime = Date.now();
-    momentumX = 0;
-    momentumY = 0;
-
-    // Add event listeners for move and end events
+  /**
+   * Set up all event listeners
+   */
+  setupEventListeners() {
+    // Pointer events (modern browsers)
     if (window.PointerEvent) {
-      document.addEventListener("pointermove", handleDragMove);
-      document.addEventListener("pointerup", handleDragEnd);
+      document.addEventListener("pointerdown", this.handleDragStart);
     } else {
-      document.addEventListener("mousemove", handleDragMove);
-      document.addEventListener("mouseup", handleDragEnd);
-      document.addEventListener("touchmove", handleDragMove);
-      document.addEventListener("touchend", handleDragEnd);
+      // Fallback for older browsers
+      document.addEventListener("mousedown", this.handleDragStart);
+      document.addEventListener("touchstart", this.handleTouchStart);
+    }
+
+    // Keyboard controls
+    document.addEventListener("keydown", this.handleKeyDown);
+  }
+
+  /**
+   * Handle touch start events (fallback)
+   */
+  handleTouchStart(event) {
+    if (event.touches.length > 0) {
+      event.preventDefault();
+      this.handleDragStart({
+        clientX: event.touches[0].clientX,
+        clientY: event.touches[0].clientY,
+      });
     }
   }
 
-  // During dragging
-  function handleDragMove(event) {
-    if (!isDragging) return;
+  /**
+   * Start dragging interaction
+   */
+  handleDragStart(event) {
+    this.stopMomentum();
+
+    this.isDragging = true;
+    this.previousPointer = { x: event.clientX, y: event.clientY };
+    this.lastDragTime = Date.now();
+    this.momentum = { x: 0, y: 0 };
+
+    this.addDragEventListeners();
+  }
+
+  /**
+   * Add event listeners for drag movement and end
+   */
+  addDragEventListeners() {
+    if (window.PointerEvent) {
+      document.addEventListener("pointermove", this.handleDragMove);
+      document.addEventListener("pointerup", this.handleDragEnd);
+    } else {
+      document.addEventListener("mousemove", this.handleDragMove);
+      document.addEventListener("mouseup", this.handleDragEnd);
+      document.addEventListener("touchmove", this.handleDragMove);
+      document.addEventListener("touchend", this.handleDragEnd);
+    }
+  }
+
+  /**
+   * Remove drag event listeners
+   */
+  removeDragEventListeners() {
+    if (window.PointerEvent) {
+      document.removeEventListener("pointermove", this.handleDragMove);
+      document.removeEventListener("pointerup", this.handleDragEnd);
+    } else {
+      document.removeEventListener("mousemove", this.handleDragMove);
+      document.removeEventListener("mouseup", this.handleDragEnd);
+      document.removeEventListener("touchmove", this.handleDragMove);
+      document.removeEventListener("touchend", this.handleDragEnd);
+    }
+  }
+
+  /**
+   * Handle drag movement
+   */
+  handleDragMove(event) {
+    if (!this.isDragging) return;
 
     let currentX, currentY;
     const currentTime = Date.now();
-    const elapsed = currentTime - lastDragTime;
+    const elapsed = currentTime - this.lastDragTime;
 
-    // Get current pointer/touch coordinates
+    // Get current coordinates
     if (event.type === "touchmove") {
       event.preventDefault();
       currentX = event.touches[0].clientX;
@@ -97,93 +137,156 @@ document.addEventListener("DOMContentLoaded", () => {
       currentY = event.clientY;
     }
 
-    // Calculate the movement delta
-    const deltaX = currentX - previousMouseX;
-    const deltaY = currentY - previousMouseY;
+    // Calculate movement delta
+    const deltaX = currentX - this.previousPointer.x;
+    const deltaY = currentY - this.previousPointer.y;
 
-    // Calculate momentum (speed = distance / time)
+    // Calculate momentum
     if (elapsed > 0) {
-      momentumX = (deltaX / elapsed) * SCALE_FACTOR_X;
-      momentumY = (-deltaY / elapsed) * SCALE_FACTOR_Y; // Negative because Y rotation is inverted
+      this.momentum.x = (deltaX / elapsed) * this.config.scaleFactorX;
+      this.momentum.y = (-deltaY / elapsed) * this.config.scaleFactorY;
     }
 
-    // Update rotation (note that horizontal movement affects Y-axis rotation and vice versa)
-    rotationX += deltaX * ROTATION_SENSITIVITY;
-    rotationY -= deltaY * ROTATION_SENSITIVITY;
+    // Update rotation
+    this.rotation.x += deltaX * this.config.rotationSensitivity;
+    this.rotation.y -= deltaY * this.config.rotationSensitivity;
 
-    // Update the model's rotation
-    updateModelRotation();
+    this.updateModelRotation();
 
-    // Save current position and time for next move event
-    previousMouseX = currentX;
-    previousMouseY = currentY;
-    lastDragTime = currentTime;
+    // Update state for next iteration
+    this.previousPointer = { x: currentX, y: currentY };
+    this.lastDragTime = currentTime;
   }
 
-  // End dragging
-  function handleDragEnd() {
-    isDragging = false;
+  /**
+   * End dragging interaction
+   */
+  handleDragEnd() {
+    this.isDragging = false;
+    this.removeDragEventListeners();
 
-    // Start momentum animation
-    if (Math.abs(momentumX) > MOMENTUM_THRESHOLD || Math.abs(momentumY) > MOMENTUM_THRESHOLD) {
-      animationFrameId = requestAnimationFrame(applyMomentum);
-    }
-
-    // Remove event listeners
-    if (window.PointerEvent) {
-      document.removeEventListener("pointermove", handleDragMove);
-      document.removeEventListener("pointerup", handleDragEnd);
-    } else {
-      document.removeEventListener("mousemove", handleDragMove);
-      document.removeEventListener("mouseup", handleDragEnd);
-      document.removeEventListener("touchmove", handleDragMove);
-      document.removeEventListener("touchend", handleDragEnd);
+    // Start momentum animation if significant
+    if (this.hasSignificantMomentum()) {
+      this.startMomentum();
     }
   }
 
-  // Set up event listeners for drag start on the entire document
-  if (window.PointerEvent) {
-    // Modern browsers with pointer events
-    document.addEventListener("pointerdown", (event) => {
-      handleDragStart(event.clientX, event.clientY);
-    });
-  } else {
-    // Fallback for older browsers
-    document.addEventListener("mousedown", (event) => {
-      handleDragStart(event.clientX, event.clientY);
-    });
-
-    document.addEventListener("touchstart", (event) => {
-      if (event.touches.length > 0) {
-        event.preventDefault();
-        handleDragStart(event.touches[0].clientX, event.touches[0].clientY);
-      }
-    });
+  /**
+   * Check if momentum is significant enough to continue animation
+   */
+  hasSignificantMomentum() {
+    return (
+      Math.abs(this.momentum.x) > this.config.momentumThreshold ||
+      Math.abs(this.momentum.y) > this.config.momentumThreshold
+    );
   }
 
-  // Keyboard controls for rotation
-  function handleKey(event) {
-    switch (event.key) {
-      case "ArrowUp":
-        rotationY += KEY_ROTATION_STEP;
-        break;
-      case "ArrowDown":
-        rotationY -= KEY_ROTATION_STEP;
-        break;
-      case "ArrowLeft":
-        rotationX -= KEY_ROTATION_STEP;
-        break;
-      case "ArrowRight":
-        rotationX += KEY_ROTATION_STEP;
-        break;
-      default:
-        return;
+  /**
+   * Start momentum animation
+   */
+  startMomentum() {
+    this.animationFrameId = requestAnimationFrame(this.applyMomentum);
+  }
+
+  /**
+   * Stop momentum animation
+   */
+  stopMomentum() {
+    if (this.animationFrameId !== null) {
+      cancelAnimationFrame(this.animationFrameId);
+      this.animationFrameId = null;
     }
-    updateModelRotation();
   }
 
-  document.addEventListener("keydown", handleKey);
+  /**
+   * Apply momentum and gradually slow down
+   */
+  applyMomentum() {
+    if (!this.hasSignificantMomentum()) {
+      this.animationFrameId = null;
+      return;
+    }
 
-  // Initial render of the model
-  updateModelRotation();
+    // Apply momentum to rotation
+    this.rotation.x += this.momentum.x;
+    this.rotation.y += this.momentum.y;
+
+    // Apply friction
+    this.momentum.x *= this.config.friction;
+    this.momentum.y *= this.config.friction;
+
+    this.updateModelRotation();
+    this.animationFrameId = requestAnimationFrame(this.applyMomentum);
+  }
+
+  /**
+   * Handle keyboard controls
+   */
+  handleKeyDown(event) {
+    const keyActions = {
+      ArrowUp: () => (this.rotation.y += this.config.keyRotationStep),
+      ArrowDown: () => (this.rotation.y -= this.config.keyRotationStep),
+      ArrowLeft: () => (this.rotation.x -= this.config.keyRotationStep),
+      ArrowRight: () => (this.rotation.x += this.config.keyRotationStep),
+    };
+
+    const action = keyActions[event.key];
+    if (action) {
+      action();
+      this.updateModelRotation();
+    }
+  }
+
+  /**
+   * Update the model's visual rotation
+   */
+  updateModelRotation() {
+    this.canvas.style.transform = `rotateX(${this.rotation.y}deg) rotateY(${this.rotation.x}deg)`;
+  }
+
+  /**
+   * Reset rotation to initial state
+   */
+  resetRotation() {
+    this.rotation = { x: 0, y: 0 };
+    this.stopMomentum();
+    this.updateModelRotation();
+  }
+
+  /**
+   * Get current rotation values
+   */
+  getRotation() {
+    return { ...this.rotation };
+  }
+
+  /**
+   * Set rotation values
+   */
+  setRotation(x, y) {
+    this.rotation = { x, y };
+    this.updateModelRotation();
+  }
+
+  /**
+   * Clean up event listeners
+   */
+  destroy() {
+    this.stopMomentum();
+    this.removeDragEventListeners();
+    document.removeEventListener("keydown", this.handleKeyDown);
+  }
+}
+
+// Initialize when DOM is ready
+document.addEventListener("DOMContentLoaded", () => {
+  const canvas = document.getElementById("canvas");
+
+  if (!canvas) {
+    console.error("Canvas element not found");
+    return;
+  }
+
+  // Create and initialize the rotation controller
+  new ModelRotationController(canvas);
 });

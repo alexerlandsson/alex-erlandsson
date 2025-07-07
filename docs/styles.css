@@ -515,7 +515,7 @@ body {
 ====================== */
 
 @supports selector(:focus-visible) {
-  :where(a, button, input, select, textarea, summary, [role="button"], .scene) {
+  :where(a, button, input, select, textarea, summary, [role="button"]) {
     &:focus-visible {
       outline: 2px solid var(--color-focus);
       outline-offset: 2px;
@@ -524,7 +524,7 @@ body {
 }
 
 @supports not selector(:focus-visible) {
-  :where(a, button, input, select, textarea, summary, [role="button"], .scene) {
+  :where(a, button, input, select, textarea, summary, [role="button"]) {
     &:focus {
       outline: 2px solid var(--color-focus);
       outline-offset: 2px;
