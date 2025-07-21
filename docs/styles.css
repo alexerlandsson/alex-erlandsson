@@ -104,6 +104,9 @@ body {
   margin: 0;
   font-size: 1rem;
   font-weight: 400;
+  -webkit-text-stroke: 1px var(--color-bg);
+  /* stylelint-disable-next-line property-no-unknown */
+  text-stroke: 1px var(--color-bg);
 }
 
 .header__list {
@@ -157,6 +160,9 @@ body {
   color: currentColor;
   text-decoration: none;
   font-size: 0.875rem;
+  -webkit-text-stroke: 1px var(--color-bg);
+  /* stylelint-disable-next-line property-no-unknown */
+  text-stroke: 1px var(--color-bg);
 
   &:hover {
     text-decoration: underline;
