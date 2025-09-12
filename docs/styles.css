@@ -282,6 +282,107 @@ body {
 }
 
 /* ======================
+   Cuboid
+====================== */
+
+.cuboid {
+  --_w: calc(var(--w, 1) * var(--canvas-base-unit)); /* Width */
+  --_h: calc(var(--h, 1) * var(--canvas-base-unit)); /* Height */
+  --_d: calc(var(--d, 1) * var(--canvas-base-unit)); /* Depth */
+  --_x: calc(var(--x, 0) * var(--canvas-base-unit)); /* Pos X */
+  --_y: calc(var(--y, 0) * var(--canvas-base-unit)); /* Pos Y */
+  --_z: calc(var(--z, 0) * var(--canvas-base-unit)); /* Pos Z */
+  --_c: var(--c); /* Color */
+
+  position: absolute;
+  transform-style: preserve-3d;
+  width: var(--_w);
+  height: var(--_h);
+  transform: translate3d(var(--_x), var(--_y), calc(var(--_canvas-depth) * 0.5 - var(--_d) * 0.5 - var(--_z)));
+}
+
+.cuboid__trifold {
+  position: absolute;
+  background-color: var(--_c);
+  transform-style: preserve-3d;
+}
+
+.cuboid__trifold::before,
+.cuboid__trifold::after {
+  content: "";
+  display: block;
+  position: absolute;
+  background-color: rgb(255 0 0 / 25%);
+}
+
+/*
+
+Trifold 1
+DOM: Front
+::before: Left
+::after: Right
+
+Trifold 2
+DOM: Back
+::before: Top
+::after: Bottom
+
+*/
+
+/* Front & Back */
+.cuboid__trifold--1,
+.cuboid__trifold--2 {
+  width: var(--_w);
+  height: var(--_h);
+}
+
+/* Left & Right */
+.cuboid__trifold--1::before,
+.cuboid__trifold--1::after {
+  width: var(--_d);
+  height: var(--_h);
+  left: calc(var(--_w) * 0.5 - var(--_d) * 0.5);
+}
+
+/* Top & Bottom */
+.cuboid__trifold--2::before,
+.cuboid__trifold--2::after {
+  width: var(--_w);
+  height: var(--_d);
+  top: calc(var(--_h) * 0.5 - var(--_d) * 0.5);
+}
+
+/* Front */
+.cuboid__trifold--1 {
+  transform: rotateY(0deg) translateZ(calc(var(--_d) * 0.5));
+}
+
+/* Left */
+.cuboid__trifold--1::before {
+  transform: rotateY(-90deg) translateZ(calc(var(--_w) * 0.5));
+}
+
+/* Right */
+.cuboid__trifold--1::after {
+  transform: rotateY(90deg) translateZ(calc(var(--_w) * 0.5));
+}
+
+/* Back */
+.cuboid__trifold--2 {
+  transform: rotateY(180deg) translateZ(calc(var(--_d) * 0.5));
+}
+
+/* Top */
+.cuboid__trifold--2::before {
+  transform: rotateX(90deg) translateZ(calc(var(--_h) * 0.5));
+}
+
+/* Bottom */
+.cuboid__trifold--2::after {
+  transform: rotateX(-90deg) translateZ(calc(var(--_h) * 0.5));
+}
+
+/* ======================
    Avatar
 ====================== */
 
