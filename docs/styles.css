@@ -225,76 +225,68 @@ body {
   --_z: calc(var(--z, 0) * var(--canvas-base-unit)); /* Pos Z */
   --_c: var(--c); /* Color */
 
-  position: absolute;
-  transform-style: preserve-3d;
-  width: var(--_w);
-  height: var(--_h);
+  transform-style: inherit;
   transform: translate3d(var(--_x), var(--_y), calc(var(--_canvas-depth) * 0.5 - var(--_d) * 0.5 - var(--_z)));
 }
 
-.cuboid__trifold {
+.cuboid__part {
   position: absolute;
-  background-color: var(--_c);
-  transform-style: preserve-3d;
-}
-
-.cuboid__trifold::before,
-.cuboid__trifold::after {
-  content: "";
-  position: absolute;
-  background-color: inherit;
-}
-
-/* Cuboid Side: Front & Back */
-.cuboid__trifold--1,
-.cuboid__trifold--2 {
+  transform-style: inherit;
   width: var(--_w);
   height: var(--_h);
+  background-color: var(--_c);
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    background-color: inherit;
+  }
 }
 
 /* Cuboid Side: Left & Right */
-.cuboid__trifold--1::before,
-.cuboid__trifold--1::after {
+.cuboid__part:nth-child(1)::before,
+.cuboid__part:nth-child(1)::after {
   width: var(--_d);
   height: var(--_h);
   left: calc(var(--_w) * 0.5 - var(--_d) * 0.5);
 }
 
 /* Cuboid Side: Top & Bottom */
-.cuboid__trifold--2::before,
-.cuboid__trifold--2::after {
+.cuboid__part:nth-child(2)::before,
+.cuboid__part:nth-child(2)::after {
   width: var(--_w);
   height: var(--_d);
   top: calc(var(--_h) * 0.5 - var(--_d) * 0.5);
 }
 
 /* Cuboid Side: Front */
-.cuboid__trifold--1 {
+.cuboid__part:nth-child(1) {
   transform: rotateY(0deg) translateZ(calc(var(--_d) * 0.5));
 }
 
 /* Cuboid Side: Left */
-.cuboid__trifold--1::before {
+.cuboid__part:nth-child(1)::before {
   transform: rotateY(-90deg) translateZ(calc(var(--_w) * 0.5)) translateX(-50%);
 }
 
 /* Cuboid Side: Right */
-.cuboid__trifold--1::after {
+.cuboid__part:nth-child(1)::after {
   transform: rotateY(90deg) translateZ(calc(var(--_w) * 0.5)) translateX(50%);
 }
 
 /* Cuboid Side: Back */
-.cuboid__trifold--2 {
+.cuboid__part:nth-child(2) {
   transform: rotateY(180deg) translateZ(calc(var(--_d) * 0.5));
 }
 
 /* Cuboid Side: Top */
-.cuboid__trifold--2::before {
+.cuboid__part:nth-child(2)::before {
   transform: rotateX(90deg) translateZ(calc(var(--_h) * 0.5)) translateY(-50%);
 }
 
 /* Cuboid Side: Bottom */
-.cuboid__trifold--2::after {
+.cuboid__part:nth-child(2)::after {
   transform: rotateX(-90deg) translateZ(calc(var(--_h) * 0.5)) translateY(50%);
 }
 
