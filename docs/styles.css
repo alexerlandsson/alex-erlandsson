@@ -213,75 +213,6 @@ body {
 }
 
 /* ======================
-   Rect
-====================== */
-
-.rect {
-  --_w: calc(var(--w, 1) * var(--canvas-base-unit)); /* Width */
-  --_h: calc(var(--h, 1) * var(--canvas-base-unit)); /* Height */
-  --_d: calc(var(--d, 1) * var(--canvas-base-unit)); /* Depth */
-  --_x: calc(var(--x, 0) * var(--canvas-base-unit)); /* Pos X */
-  --_y: calc(var(--y, 0) * var(--canvas-base-unit)); /* Pos Y */
-  --_z: calc(var(--z, 0) * var(--canvas-base-unit)); /* Pos Z */
-  --_c: var(--c); /* Color */
-
-  position: absolute;
-  transform-style: preserve-3d;
-  width: var(--_w);
-  height: var(--_h);
-  transform: translate3d(var(--_x), var(--_y), calc(var(--_canvas-depth) * 0.5 - var(--_d) * 0.5 - var(--_z)));
-}
-
-.rect__face {
-  position: absolute;
-  background-color: var(--_c);
-}
-
-.rect__face--front,
-.rect__face--back {
-  width: var(--_w);
-  height: var(--_h);
-}
-
-.rect__face--left,
-.rect__face--right {
-  width: var(--_d);
-  height: var(--_h);
-  left: calc(var(--_w) * 0.5 - var(--_d) * 0.5);
-}
-
-.rect__face--top,
-.rect__face--bottom {
-  width: var(--_w);
-  height: var(--_d);
-  top: calc(var(--_h) * 0.5 - var(--_d) * 0.5);
-}
-
-.rect__face--front {
-  transform: rotateY(0deg) translateZ(calc(var(--_d) * 0.5));
-}
-
-.rect__face--back {
-  transform: rotateY(180deg) translateZ(calc(var(--_d) * 0.5));
-}
-
-.rect__face--left {
-  transform: rotateY(-90deg) translateZ(calc(var(--_w) * 0.5));
-}
-
-.rect__face--right {
-  transform: rotateY(90deg) translateZ(calc(var(--_w) * 0.5));
-}
-
-.rect__face--top {
-  transform: rotateX(90deg) translateZ(calc(var(--_h) * 0.5));
-}
-
-.rect__face--bottom {
-  transform: rotateX(-90deg) translateZ(calc(var(--_h) * 0.5));
-}
-
-/* ======================
    Cuboid
 ====================== */
 
@@ -314,14 +245,14 @@ body {
   background-color: inherit;
 }
 
-/* Front & Back */
+/* Cuboid Side: Front & Back */
 .cuboid__trifold--1,
 .cuboid__trifold--2 {
   width: var(--_w);
   height: var(--_h);
 }
 
-/* Left & Right */
+/* Cuboid Side: Left & Right */
 .cuboid__trifold--1::before,
 .cuboid__trifold--1::after {
   width: var(--_d);
@@ -329,7 +260,7 @@ body {
   left: calc(var(--_w) * 0.5 - var(--_d) * 0.5);
 }
 
-/* Top & Bottom */
+/* Cuboid Side: Top & Bottom */
 .cuboid__trifold--2::before,
 .cuboid__trifold--2::after {
   width: var(--_w);
@@ -337,32 +268,32 @@ body {
   top: calc(var(--_h) * 0.5 - var(--_d) * 0.5);
 }
 
-/* Front */
+/* Cuboid Side: Front */
 .cuboid__trifold--1 {
   transform: rotateY(0deg) translateZ(calc(var(--_d) * 0.5));
 }
 
-/* Left */
+/* Cuboid Side: Left */
 .cuboid__trifold--1::before {
   transform: rotateY(-90deg) translateZ(calc(var(--_w) * 0.5)) translateX(-50%);
 }
 
-/* Right */
+/* Cuboid Side: Right */
 .cuboid__trifold--1::after {
   transform: rotateY(90deg) translateZ(calc(var(--_w) * 0.5)) translateX(50%);
 }
 
-/* Back */
+/* Cuboid Side: Back */
 .cuboid__trifold--2 {
   transform: rotateY(180deg) translateZ(calc(var(--_d) * 0.5));
 }
 
-/* Top */
+/* Cuboid Side: Top */
 .cuboid__trifold--2::before {
   transform: rotateX(90deg) translateZ(calc(var(--_h) * 0.5)) translateY(-50%);
 }
 
-/* Bottom */
+/* Cuboid Side: Bottom */
 .cuboid__trifold--2::after {
   transform: rotateX(-90deg) translateZ(calc(var(--_h) * 0.5)) translateY(50%);
 }
