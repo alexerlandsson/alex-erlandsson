@@ -310,24 +310,9 @@ body {
 .cuboid__trifold::before,
 .cuboid__trifold::after {
   content: "";
-  display: block;
   position: absolute;
-  background-color: rgb(255 0 0 / 25%);
+  background-color: inherit;
 }
-
-/*
-
-Trifold 1
-DOM: Front
-::before: Left
-::after: Right
-
-Trifold 2
-DOM: Back
-::before: Top
-::after: Bottom
-
-*/
 
 /* Front & Back */
 .cuboid__trifold--1,
@@ -359,12 +344,12 @@ DOM: Back
 
 /* Left */
 .cuboid__trifold--1::before {
-  transform: rotateY(-90deg) translateZ(calc(var(--_w) * 0.5));
+  transform: rotateY(-90deg) translateZ(calc(var(--_w) * 0.5)) translateX(-50%);
 }
 
 /* Right */
 .cuboid__trifold--1::after {
-  transform: rotateY(90deg) translateZ(calc(var(--_w) * 0.5));
+  transform: rotateY(90deg) translateZ(calc(var(--_w) * 0.5)) translateX(50%);
 }
 
 /* Back */
@@ -374,12 +359,12 @@ DOM: Back
 
 /* Top */
 .cuboid__trifold--2::before {
-  transform: rotateX(90deg) translateZ(calc(var(--_h) * 0.5));
+  transform: rotateX(90deg) translateZ(calc(var(--_h) * 0.5)) translateY(-50%);
 }
 
 /* Bottom */
 .cuboid__trifold--2::after {
-  transform: rotateX(-90deg) translateZ(calc(var(--_h) * 0.5));
+  transform: rotateX(-90deg) translateZ(calc(var(--_h) * 0.5)) translateY(50%);
 }
 
 /* ======================
