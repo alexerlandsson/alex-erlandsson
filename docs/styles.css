@@ -242,7 +242,7 @@ body {
   --_z: calc(var(--z, 0) * var(--canvas-base-unit)); /* Pos Z */
   --_c: var(--c); /* Color */
 
-  transform: translate3d(var(--_x), var(--_y), calc(var(--_canvas-depth) * 0.5 - var(--_z) - var(--_d))) rotateY(180deg);
+  transform: translate3d(var(--_x), var(--_y), calc(var(--_canvas-depth) * 0.5 - var(--_z) - var(--_d)));
 }
 
 /* Cuboid Side: Left & Right */
@@ -255,17 +255,17 @@ body {
 
 /* Cuboid Side: Left */
 .cuboid::before {
-  transform: rotateY(-90deg) translateZ(calc(var(--_w) * 0.5)) translateX(-50%);
+  transform: rotateY(90deg) translateZ(calc(var(--_w) * 0.5)) translateX(-50%);
 }
 
 /* Cuboid Side: Right */
 .cuboid::after {
-  transform: rotateY(90deg) translateZ(calc(var(--_w) * 0.5)) translateX(50%);
+  transform: rotateY(-90deg) translateZ(calc(var(--_w) * 0.5)) translateX(50%);
 }
 
 /* Cuboid Side: Front */
 .cuboid__inner {
-  transform: rotateY(180deg) translateZ(var(--_d));
+  transform: translateZ(var(--_d));
 }
 
 /* Cuboid Side: Top & Bottom */
