@@ -31,7 +31,7 @@
 }
 
 /* ======================
-   Base styling
+   Global styles
 ====================== */
 
 *,
@@ -63,6 +63,10 @@ body {
   font-size: 1rem;
   user-select: none;
 }
+
+/* ======================
+   Utilities
+====================== */
 
 .sr-only {
   position: absolute;
@@ -216,20 +220,8 @@ body {
    Cuboid
 ====================== */
 
-.cuboid {
-  --_w: calc(var(--w, 1) * var(--canvas-base-unit)); /* Width */
-  --_h: calc(var(--h, 1) * var(--canvas-base-unit)); /* Height */
-  --_d: calc(var(--d, 1) * var(--canvas-base-unit)); /* Depth */
-  --_x: calc(var(--x, 0) * var(--canvas-base-unit)); /* Pos X */
-  --_y: calc(var(--y, 0) * var(--canvas-base-unit)); /* Pos Y */
-  --_z: calc(var(--z, 0) * var(--canvas-base-unit)); /* Pos Z */
-  --_c: var(--c); /* Color */
-
-  transform-style: inherit;
-  transform: translate3d(var(--_x), var(--_y), calc(var(--_canvas-depth) * 0.5 - var(--_d) * 0.5 - var(--_z)));
-}
-
-.cuboid__part {
+.cuboid,
+.cuboid__inner {
   position: absolute;
   transform-style: inherit;
   width: var(--_w);
@@ -239,54 +231,62 @@ body {
   &::before,
   &::after {
     content: "";
-    position: absolute;
+    position: inherit;
     background-color: inherit;
   }
 }
 
+/* Cuboid Side: Back */
+.cuboid {
+  --_w: calc(var(--w, 1) * var(--canvas-base-unit)); /* Width */
+  --_h: calc(var(--h, 1) * var(--canvas-base-unit)); /* Height */
+  --_d: calc(var(--d, 1) * var(--canvas-base-unit)); /* Depth */
+  --_x: calc(var(--x, 0) * var(--canvas-base-unit)); /* Pos X */
+  --_y: calc(var(--y, 0) * var(--canvas-base-unit)); /* Pos Y */
+  --_z: calc(var(--z, 0) * var(--canvas-base-unit)); /* Pos Z */
+  --_c: var(--c); /* Color */
+
+  transform: translate3d(var(--_x), var(--_y), calc(var(--_canvas-depth) * 0.5 - var(--_z) - var(--_d)));
+}
+
 /* Cuboid Side: Left & Right */
-.cuboid__part:nth-child(1)::before,
-.cuboid__part:nth-child(1)::after {
+.cuboid::before,
+.cuboid::after {
   width: var(--_d);
   height: var(--_h);
   left: calc(var(--_w) * 0.5 - var(--_d) * 0.5);
 }
 
+/* Cuboid Side: Left */
+.cuboid::before {
+  transform: rotateY(90deg) translateZ(calc(var(--_w) * 0.5)) translateX(-50%);
+}
+
+/* Cuboid Side: Right */
+.cuboid::after {
+  transform: rotateY(-90deg) translateZ(calc(var(--_w) * 0.5)) translateX(50%);
+}
+
+/* Cuboid Side: Front */
+.cuboid__inner {
+  transform: translateZ(var(--_d));
+}
+
 /* Cuboid Side: Top & Bottom */
-.cuboid__part:nth-child(2)::before,
-.cuboid__part:nth-child(2)::after {
+.cuboid__inner::before,
+.cuboid__inner::after {
   width: var(--_w);
   height: var(--_d);
   top: calc(var(--_h) * 0.5 - var(--_d) * 0.5);
 }
 
-/* Cuboid Side: Front */
-.cuboid__part:nth-child(1) {
-  transform: rotateY(0deg) translateZ(calc(var(--_d) * 0.5));
-}
-
-/* Cuboid Side: Left */
-.cuboid__part:nth-child(1)::before {
-  transform: rotateY(-90deg) translateZ(calc(var(--_w) * 0.5)) translateX(-50%);
-}
-
-/* Cuboid Side: Right */
-.cuboid__part:nth-child(1)::after {
-  transform: rotateY(90deg) translateZ(calc(var(--_w) * 0.5)) translateX(50%);
-}
-
-/* Cuboid Side: Back */
-.cuboid__part:nth-child(2) {
-  transform: rotateY(180deg) translateZ(calc(var(--_d) * 0.5));
-}
-
 /* Cuboid Side: Top */
-.cuboid__part:nth-child(2)::before {
+.cuboid__inner::before {
   transform: rotateX(90deg) translateZ(calc(var(--_h) * 0.5)) translateY(-50%);
 }
 
 /* Cuboid Side: Bottom */
-.cuboid__part:nth-child(2)::after {
+.cuboid__inner::after {
   transform: rotateX(-90deg) translateZ(calc(var(--_h) * 0.5)) translateY(50%);
 }
 
