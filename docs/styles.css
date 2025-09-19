@@ -242,8 +242,7 @@ body {
   --_z: calc(var(--z, 0) * var(--canvas-base-unit)); /* Pos Z */
   --_c: var(--c); /* Color */
 
-  transform: translate3d(var(--_x), var(--_y), calc(var(--_canvas-depth) * 0.5 - var(--_z))) rotateY(180deg)
-    translateZ(var(--_d));
+  transform: translate3d(var(--_x), var(--_y), calc(var(--_canvas-depth) * 0.5 - var(--_z) - var(--_d))) rotateY(180deg);
 }
 
 /* Cuboid Side: Left & Right */
