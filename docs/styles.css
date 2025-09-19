@@ -213,7 +213,7 @@ body {
 }
 
 /* ======================
-   Cuboid V2
+   Cuboid
 ====================== */
 
 .cuboid,
@@ -232,7 +232,7 @@ body {
   }
 }
 
-/* Cuboid Side: Front */
+/* Cuboid Side: Back */
 .cuboid {
   --_w: calc(var(--w, 1) * var(--canvas-base-unit)); /* Width */
   --_h: calc(var(--h, 1) * var(--canvas-base-unit)); /* Height */
@@ -242,7 +242,8 @@ body {
   --_z: calc(var(--z, 0) * var(--canvas-base-unit)); /* Pos Z */
   --_c: var(--c); /* Color */
 
-  transform: translate3d(var(--_x), var(--_y), calc(var(--_canvas-depth) * 0.5 - var(--_z)));
+  transform: translate3d(var(--_x), var(--_y), calc(var(--_canvas-depth) * 0.5 - var(--_z))) rotateY(180deg)
+    translateZ(var(--_d));
 }
 
 /* Cuboid Side: Left & Right */
@@ -263,7 +264,7 @@ body {
   transform: rotateY(90deg) translateZ(calc(var(--_w) * 0.5)) translateX(50%);
 }
 
-/* Cuboid Side: Back */
+/* Cuboid Side: Front */
 .cuboid__inner {
   transform: rotateY(180deg) translateZ(var(--_d));
 }
@@ -535,14 +536,4 @@ body {
       outline-offset: 2px;
     }
   }
-}
-
-.demo {
-  --w: 1;
-  --h: 1;
-  --d: 1;
-  --x: 0;
-  --y: 0;
-  --z: 0;
-  --c: limegreen;
 }
