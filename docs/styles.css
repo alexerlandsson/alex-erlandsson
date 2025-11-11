@@ -10,23 +10,21 @@
   --font-family: ui-monospace, "Cascadia Code", "Source Code Pro", menlo, consolas, "DejaVu Sans Mono", monospace;
 
   /* Colors */
-  --color-bg: #fff;
+  --color-bg: #e9e6e2;
   --color-fg: #000;
   --color-focus: #3b82f6;
   --color-hair: #5c2f13;
   --color-tshirt: #0e1d32;
   --color-trousers: #1e3f98;
   --color-shoes-top: #7a7873;
-  --color-shoes-bottom: #dedede;
+  --color-shoes-bottom: #fff;
   --color-skin: #d6b098;
-  --color-speak-bubble-bg: #f1f1f1;
+  --color-speak-bubble-bg: #fff;
   --color-speak-bubble-fg: #000;
 
   @media (prefers-color-scheme: dark) {
     --color-bg: #000;
     --color-fg: #fff;
-    --color-shoes-bottom: #fff;
-    --color-speak-bubble-bg: #fff;
   }
 }
 
