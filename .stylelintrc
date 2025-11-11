@@ -15,6 +15,7 @@
       }
     ],
     "custom-property-pattern": "^[-_]?[a-zA-Z0-9][-_a-zA-Z0-9]*(?:--[a-zA-Z0-9]+)*$",
-    "property-no-deprecated": null
+    "property-no-deprecated": null,
+    "declaration-property-value-no-unknown": null
   }
 }

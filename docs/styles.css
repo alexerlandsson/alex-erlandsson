@@ -93,6 +93,17 @@ body {
    Header
 ====================== */
 
+@keyframes header-animate-in {
+  0%,
+  20% {
+    transform: translateY(-100%);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
 .header {
   flex-shrink: 0;
   display: flex;
@@ -102,6 +113,10 @@ body {
   gap: calc(var(--gutter) * 0.5) var(--gutter);
   padding-block-start: var(--gutter);
   padding-inline: var(--gutter);
+
+  @media not (prefers-reduced-motion: reduce) {
+    animation: header-animate-in 1500ms linear(0, 1.25, 1, 0.9, 1.04, 0.99, 1.005, 0.996, 1.001, 0.999, 1);
+  }
 }
 
 .header__title {
@@ -138,6 +153,17 @@ body {
    Footer
 ====================== */
 
+@keyframes footer-animate-in {
+  0%,
+  40% {
+    transform: translateY(100%);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
 .footer {
   flex-shrink: 0;
   display: flex;
@@ -145,6 +171,10 @@ body {
   justify-content: center;
   padding-block-end: var(--gutter);
   padding-inline: var(--gutter);
+
+  @media not (prefers-reduced-motion: reduce) {
+    animation: footer-animate-in 1500ms linear(0, 1.25, 1, 0.9, 1.04, 0.99, 1.005, 0.996, 1.001, 0.999, 1);
+  }
 }
 
 .footer__nav-list {
@@ -207,6 +237,12 @@ body {
    Canvas
 ====================== */
 
+@keyframes canvas-animate-in {
+  to {
+    transform: rotateY(1turn);
+  }
+}
+
 .canvas {
   position: relative;
   width: 100%;
@@ -214,6 +250,10 @@ body {
   transform-style: preserve-3d;
   translate: 0 0 calc(var(--_canvas-depth) * -0.5);
   margin: 0;
+
+  @media not (prefers-reduced-motion: reduce) {
+    animation: canvas-animate-in 1500ms linear(0, 1.25, 1, 0.9, 1.04, 0.99, 1.005, 0.996, 1.001, 0.999, 1);
+  }
 }
 
 /* ======================
