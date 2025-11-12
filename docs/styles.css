@@ -22,9 +22,17 @@
   --color-speak-bubble-bg: #fff;
   --color-speak-bubble-fg: #000;
 
+  @media (prefers-contrast: more) {
+    --color-tshirt: #000;
+  }
+
   @media (prefers-color-scheme: dark) {
     --color-bg: #000;
     --color-fg: #fff;
+
+    @media (prefers-contrast: more) {
+      --color-tshirt: #fff;
+    }
   }
 }
 
