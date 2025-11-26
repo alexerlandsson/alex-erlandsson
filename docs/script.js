@@ -20,6 +20,7 @@ class ModelRotationController {
     // State
     this.rotation = { x: 0, y: 0 };
     this.isDragging = false;
+    this.isEnabled = true;
     this.previousPointer = { x: 0, y: 0 };
     this.momentum = { x: 0, y: 0 };
     this.lastDragTime = 0;
@@ -77,6 +78,8 @@ class ModelRotationController {
    * Start dragging interaction
    */
   handleDragStart(event) {
+    if (!this.isEnabled) return;
+
     this.stopMomentum();
 
     this.isDragging = true;
@@ -223,6 +226,8 @@ class ModelRotationController {
    * Handle keyboard controls
    */
   handleKeyDown(event) {
+    if (!this.isEnabled) return;
+
     const keyActions = {
       ArrowUp: () => (this.rotation.y += this.config.keyRotationStep),
       ArrowDown: () => (this.rotation.y -= this.config.keyRotationStep),
@@ -235,6 +240,21 @@ class ModelRotationController {
       action();
       this.updateModelRotation();
     }
+  }
+
+  /**
+   * Enable drag controls
+   */
+  enable() {
+    this.isEnabled = true;
+  }
+
+  /**
+   * Disable drag controls
+   */
+  disable() {
+    this.isEnabled = false;
+    this.stopMomentum();
   }
 
   /**
@@ -278,6 +298,91 @@ class ModelRotationController {
   }
 }
 
+/**
+ * Dialog Drag Controller
+ * Handles dragging a dialog element within viewport boundaries
+ */
+class DialogDragController {
+  constructor(dialog, dragHandle) {
+    this.dialog = dialog;
+    this.dragHandle = dragHandle;
+
+    // State
+    this.isDragging = false;
+    this.offset = { x: 0, y: 0 };
+
+    // Bind methods
+    this.handleDragStart = this.handleDragStart.bind(this);
+    this.handleDragMove = this.handleDragMove.bind(this);
+    this.handleDragEnd = this.handleDragEnd.bind(this);
+    this.resetPosition = this.resetPosition.bind(this);
+
+    this.init();
+  }
+
+  init() {
+    this.dragHandle.addEventListener("pointerdown", this.handleDragStart);
+    this.dialog.addEventListener("close", this.resetPosition);
+  }
+
+  handleDragStart(event) {
+    // Don't drag if clicking on the close button
+    if (event.target.closest(".dialog__close")) return;
+
+    this.isDragging = true;
+    this.dragHandle.setPointerCapture(event.pointerId);
+
+    const rect = this.dialog.getBoundingClientRect();
+    this.offset.x = event.clientX - rect.left;
+    this.offset.y = event.clientY - rect.top;
+
+    document.addEventListener("pointermove", this.handleDragMove);
+    document.addEventListener("pointerup", this.handleDragEnd);
+  }
+
+  handleDragMove(event) {
+    if (!this.isDragging) return;
+
+    const dialogRect = this.dialog.getBoundingClientRect();
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+
+    // Calculate new position
+    let newLeft = event.clientX - this.offset.x;
+    let newTop = event.clientY - this.offset.y;
+
+    // Constrain to viewport boundaries
+    newLeft = Math.max(0, Math.min(newLeft, viewportWidth - dialogRect.width));
+    newTop = Math.max(0, Math.min(newTop, viewportHeight - dialogRect.height));
+
+    // Apply position
+    this.dialog.style.margin = "0";
+    this.dialog.style.left = `${newLeft}px`;
+    this.dialog.style.top = `${newTop}px`;
+  }
+
+  handleDragEnd(event) {
+    this.isDragging = false;
+    this.dragHandle.releasePointerCapture(event.pointerId);
+
+    document.removeEventListener("pointermove", this.handleDragMove);
+    document.removeEventListener("pointerup", this.handleDragEnd);
+  }
+
+  resetPosition() {
+    this.dialog.style.margin = "";
+    this.dialog.style.left = "";
+    this.dialog.style.top = "";
+  }
+
+  destroy() {
+    this.dragHandle.removeEventListener("pointerdown", this.handleDragStart);
+    this.dialog.removeEventListener("close", this.resetPosition);
+    document.removeEventListener("pointermove", this.handleDragMove);
+    document.removeEventListener("pointerup", this.handleDragEnd);
+  }
+}
+
 // Initialize when DOM is ready
 document.addEventListener("DOMContentLoaded", () => {
   const canvas = document.getElementById("canvas");
@@ -288,5 +393,33 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Create and initialize the rotation controller
-  new ModelRotationController(canvas);
+  const rotationController = new ModelRotationController(canvas);
+
+  // Dialog functionality
+  const aboutButton = document.getElementById("button-about");
+  const dialog = document.getElementById("dialog-about");
+  const closeButton = dialog?.querySelector(".dialog__close");
+  const dialogHeader = dialog?.querySelector(".dialog__header");
+
+  if (aboutButton && dialog) {
+    aboutButton.addEventListener("click", () => {
+      rotationController.disable();
+      dialog.showModal();
+    });
+
+    dialog.addEventListener("close", () => {
+      rotationController.enable();
+    });
+  }
+
+  if (closeButton && dialog) {
+    closeButton.addEventListener("click", () => {
+      dialog.close();
+    });
+  }
+
+  // Initialize dialog drag controller
+  if (dialog && dialogHeader) {
+    new DialogDragController(dialog, dialogHeader);
+  }
 });

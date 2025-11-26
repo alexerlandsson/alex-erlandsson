@@ -193,10 +193,20 @@ body {
   margin: 0;
 }
 
-.footer__nav-link {
+.footer__nav-action {
   color: currentColor;
   text-decoration: none;
   font-size: 0.875rem;
+
+  &:is(button) {
+    background-color: transparent;
+    padding: 0;
+    margin: 0;
+    border: none;
+    font-family: var(--font-family);
+    font-weight: inherit;
+    cursor: pointer;
+  }
 
   &:hover {
     text-decoration: underline;
@@ -334,6 +344,90 @@ body {
 /* Cuboid Side: Bottom */
 .cuboid__inner::after {
   transform: rotateX(-90deg) translateZ(calc(var(--_h) * 0.5)) translateY(50%);
+}
+
+/* ======================
+   Dialog
+====================== */
+
+.dialog {
+  --_dialog-bg: var(--color-bg);
+  --_dialog-fg: var(--color-fg);
+  --_dialog-padding: 1rem;
+
+  width: 600px;
+  max-height: calc(100dvh - var(--gutter) * 2);
+  max-width: calc(100dvw - var(--gutter) * 2);
+  padding: 0;
+  background-color: var(--_dialog-bg);
+  color: var(--_dialog-fg);
+
+  &::backdrop {
+    background-color: transparent;
+  }
+}
+
+.dialog__header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--_dialog-bg);
+  border-bottom: 1px solid currentColor;
+  cursor: move;
+}
+
+.dialog__title {
+  margin-block: 0;
+  padding-inline: var(--_dialog-padding);
+  font-size: 1rem;
+  font-weight: inherit;
+  user-select: none;
+}
+
+.dialog__close {
+  --focus-outline-offset: -2px;
+
+  align-self: stretch;
+  aspect-ratio: 1;
+  background-color: transparent;
+  padding: calc(var(--_dialog-padding) * 0.5);
+  margin: 0;
+  border: none;
+  border-left: 1px solid currentColor;
+  border-radius: 0;
+  font-size: 1em;
+  font-family: var(--font-family);
+  cursor: pointer;
+
+  &:enabled {
+    &:hover {
+      background-color: var(--_dialog-fg);
+      color: var(--_dialog-bg);
+    }
+  }
+}
+
+.dialog__close-icon {
+  display: block;
+  width: 1em;
+  height: 1em;
+}
+
+.dialog__body {
+  padding: var(--_dialog-padding);
+  overflow: auto;
+}
+
+.dialog__paragraph {
+  margin-block: 0;
+  font-size: 1rem;
+
+  & + & {
+    margin-block-start: 1lh;
+  }
 }
 
 /* ======================
@@ -573,7 +667,7 @@ body {
   :where(a, button, input, select, textarea, summary, [role="button"]) {
     &:focus-visible {
       outline: 2px solid var(--color-focus);
-      outline-offset: 2px;
+      outline-offset: var(--focus-outline-offset, 2px);
     }
   }
 }
@@ -582,7 +676,7 @@ body {
   :where(a, button, input, select, textarea, summary, [role="button"]) {
     &:focus {
       outline: 2px solid var(--color-focus);
-      outline-offset: 2px;
+      outline-offset: var(--focus-outline-offset, 2px);
     }
   }
 }

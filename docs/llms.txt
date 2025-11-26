@@ -1,0 +1,50 @@
+# Alex Erlandsson - Front-end Developer
+
+> Personal portfolio website for Alexander Erlandsson, a front-end developer based in Gothenburg, Sweden
+
+## About
+
+Alex Erlandsson is a front-end developer passionate about building scalable and accessible design systems. He specializes in CSS and enjoys pushing the boundaries of what is possible to build with CSS.
+
+With experience working on large projects at scale, Alex bridges the gap between design and development — creating interfaces that look great, feel intuitive, and work for everyone.
+
+## Site Features
+
+- Interactive 3D CSS avatar with mouse/keyboard rotation controls
+- Pure CSS 3D graphics demonstration
+- Responsive design with dark/light mode support
+- Accessible implementation with ARIA labels and semantic HTML
+
+## Key Content
+
+- **Homepage**: https://alexerlandsson.com/
+  - Features interactive 3D CSS character
+  - About section with professional background
+  - Social media links
+
+## Technical Highlights
+
+- Built with semantic HTML5
+- Advanced CSS 3D transformations and animations
+- Accessibility-focused implementation
+- Mobile-responsive design
+- Theme-aware color schemes (light/dark mode)
+
+## Social Profiles
+
+- GitHub: https://github.com/alexerlandsson/
+- CodePen: https://codepen.io/alexerlandsson
+- LinkedIn: https://se.linkedin.com/pub/alexander-erlandsson/55/8a5/159
+
+## Contact
+
+- Email: contact@alexerlandsson.com
+
+## Areas of Expertise
+
+- Front-end Development
+- CSS (Cascading Style Sheets)
+- Design Systems
+- Accessibility (A11y)
+- Scalable Architecture
+- UI/UX Implementation
