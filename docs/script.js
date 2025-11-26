@@ -383,6 +383,30 @@ class DialogDragController {
   }
 }
 
+/**
+ * Close a dialog with animation
+ * Adds closing class, waits for animation, then closes
+ */
+function closeDialogWithAnimation(dialog) {
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (prefersReducedMotion) {
+    dialog.close();
+    return;
+  }
+
+  dialog.classList.add("dialog--closing");
+
+  dialog.addEventListener(
+    "animationend",
+    () => {
+      dialog.classList.remove("dialog--closing");
+      dialog.close();
+    },
+    { once: true }
+  );
+}
+
 // Initialize when DOM is ready
 document.addEventListener("DOMContentLoaded", () => {
   const canvas = document.getElementById("canvas");
@@ -410,11 +434,17 @@ document.addEventListener("DOMContentLoaded", () => {
     dialog.addEventListener("close", () => {
       rotationController.enable();
     });
+
+    // Handle Escape key and backdrop click with animation
+    dialog.addEventListener("cancel", (event) => {
+      event.preventDefault();
+      closeDialogWithAnimation(dialog);
+    });
   }
 
   if (closeButton && dialog) {
     closeButton.addEventListener("click", () => {
-      dialog.close();
+      closeDialogWithAnimation(dialog);
     });
   }
 

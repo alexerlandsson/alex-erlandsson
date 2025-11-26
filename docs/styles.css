@@ -350,10 +350,35 @@ body {
    Dialog
 ====================== */
 
+@keyframes dialog-open {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes dialog-close {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
 .dialog {
   --_dialog-bg: var(--color-bg);
   --_dialog-fg: var(--color-fg);
   --_dialog-padding: 1rem;
+  --_dialog-animation-duration: 150ms;
 
   width: 600px;
   max-height: calc(100dvh - var(--gutter) * 2);
@@ -361,9 +386,20 @@ body {
   padding: 0;
   background-color: var(--_dialog-bg);
   color: var(--_dialog-fg);
+  border: 1px solid currentColor;
 
   &::backdrop {
     background-color: transparent;
+  }
+
+  @media not (prefers-reduced-motion: reduce) {
+    &[open] {
+      animation: dialog-open var(--_dialog-animation-duration) ease-out;
+    }
+
+    &.dialog--closing {
+      animation: dialog-close var(--_dialog-animation-duration) ease-in forwards;
+    }
   }
 }
 
