@@ -411,7 +411,7 @@ body {
   align-items: center;
   justify-content: space-between;
   background-color: var(--_dialog-bg);
-  border-bottom: 1px solid currentColor;
+  border-bottom: 1px solid;
   cursor: move;
 }
 
@@ -429,10 +429,11 @@ body {
   align-self: stretch;
   aspect-ratio: 1;
   background-color: transparent;
+  color: var(--_dialog-fg);
   padding: calc(var(--_dialog-padding) * 0.5);
   margin: 0;
   border: none;
-  border-left: 1px solid currentColor;
+  border-left: 1px solid;
   border-radius: 0;
   font-size: 1em;
   font-family: var(--font-family);
