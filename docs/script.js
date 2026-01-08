@@ -423,12 +423,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const aboutButton = document.getElementById("button-about");
   const dialog = document.getElementById("dialog-about");
   const closeButton = dialog?.querySelector(".dialog__close");
+  const dialogBody = dialog?.querySelector(".dialog__body");
   const dialogHeader = dialog?.querySelector(".dialog__header");
 
   if (aboutButton && dialog) {
     aboutButton.addEventListener("click", () => {
       rotationController.disable();
       dialog.showModal();
+      dialogBody?.focus();
     });
 
     dialog.addEventListener("close", () => {
