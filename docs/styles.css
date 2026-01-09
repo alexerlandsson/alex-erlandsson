@@ -12,6 +12,8 @@
   /* Colors */
   --color-bg: #e9e6e2;
   --color-fg: #000;
+  --color-link-bg: #fff;
+  --color-link-bg-mix: #000;
   --color-focus: #3b82f6;
   --color-hair: #5c2f13;
   --color-tshirt: #0e1d32;
@@ -29,6 +31,8 @@
   @media (prefers-color-scheme: dark) {
     --color-bg: #000;
     --color-fg: #fff;
+    --color-link-bg: #191919;
+    --color-link-bg-mix: #fff;
 
     @media (prefers-contrast: more) {
       --color-tshirt: #fff;
@@ -83,6 +87,14 @@ body {
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
   border: 0;
+}
+
+.icon {
+  display: block;
+  width: 1em;
+  height: 1em;
+  stroke: currentColor;
+  stroke-width: 2;
 }
 
 /* ======================
@@ -186,21 +198,25 @@ body {
 .footer__nav-list {
   display: flex;
   justify-content: center;
+  align-items: center;
   flex-wrap: wrap;
-  gap: 0.5rem 1rem;
+  gap: 0.25rem;
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
 .footer__nav-action {
+  display: block;
+  padding: 0.5rem 0.75rem;
+  background-color: var(--color-link-bg);
+  border-radius: 0.25rem;
   color: currentColor;
   text-decoration: none;
   font-size: 0.875rem;
+  transition: transform 200ms ease-in-out;
 
   &:is(button) {
-    background-color: transparent;
-    padding: 0;
     margin: 0;
     border: none;
     font-family: var(--font-family);
@@ -209,8 +225,18 @@ body {
   }
 
   &:hover {
-    text-decoration: underline;
+    background-color: color-mix(in oklab, var(--color-link-bg) 95%, var(--color-link-bg-mix) 5%);
   }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+.footer__nav-action--icon {
+  display: flex;
+  align-items: center;
+  gap: 0.25ch;
 }
 
 /* ======================
