@@ -159,7 +159,7 @@ body {
   color: currentColor;
   text-decoration: none;
   font-size: 0.875rem;
-  transition: transform 200ms ease-in-out;
+  transition: transform 150ms ease;
 
   &:is(button) {
     margin: 0;
@@ -357,18 +357,20 @@ body {
 }
 
 .dialog {
-  --_dialog-bg: var(--color-bg);
+  --_dialog-bg: var(--color-link-bg);
   --_dialog-fg: var(--color-fg);
   --_dialog-padding: 1rem;
   --_dialog-animation-duration: 150ms;
 
-  width: 600px;
+  width: 37.5rem;
   max-height: calc(100dvh - var(--gutter) * 2);
   max-width: calc(100dvw - var(--gutter) * 2);
   padding: 0;
   background-color: var(--_dialog-bg);
   color: var(--_dialog-fg);
-  border: 1px solid currentColor;
+  border: 0;
+  border-radius: 0.5rem;
+  box-shadow: 0 0 1rem 0 rgb(0 0 0 / 10%);
 
   &::backdrop {
     background-color: transparent;
@@ -380,7 +382,7 @@ body {
     }
 
     &.dialog--closing {
-      animation: dialog-close var(--_dialog-animation-duration) ease-in forwards;
+      animation: dialog-close var(--_dialog-animation-duration) ease-out forwards;
     }
   }
 }
@@ -393,7 +395,6 @@ body {
   align-items: center;
   justify-content: space-between;
   background-color: var(--_dialog-bg);
-  border-bottom: 1px solid;
   cursor: move;
 }
 
@@ -412,10 +413,9 @@ body {
   aspect-ratio: 1;
   background-color: transparent;
   color: var(--_dialog-fg);
-  padding: calc(var(--_dialog-padding) * 0.5);
+  padding: var(--_dialog-padding);
   margin: 0;
   border: none;
-  border-left: 1px solid;
   border-radius: 0;
   font-size: 1em;
   font-family: var(--font-family);
