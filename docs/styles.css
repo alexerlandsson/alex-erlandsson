@@ -476,7 +476,6 @@ body {
   padding-block-end: 0;
   justify-content: space-between;
   background-color: var(--_dialog-bg);
-  cursor: move;
 }
 
 .dialog__title {
