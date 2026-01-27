@@ -414,15 +414,17 @@ body {
   --_dialog-fg: var(--color-fg);
   --_dialog-padding: 1rem;
   --_dialog-animation-duration: 150ms;
+  --_dialog-radius: 1.5rem;
+  --_dialog-max-width: calc(100dvw - var(--gutter) * 2);
 
-  width: 600px;
+  width: 37rem;
   max-height: calc(100dvh - var(--gutter));
-  max-width: calc(100dvw - var(--gutter));
+  max-width: var(--_dialog-max-width);
   padding: 0;
   background-color: var(--_dialog-bg);
   color: var(--_dialog-fg);
   border: 0;
-  border-radius: 1.5rem;
+  border-radius: var(--_dialog-radius);
 
   &::backdrop {
     background-color: rgb(0 0 0 / 15%);
@@ -439,8 +441,13 @@ body {
   }
 
   @media (width < 30rem) {
+    --_dialog-radius: 2rem;
+    --_dialog-max-width: 100dvw;
+
     top: auto;
-    bottom: calc(var(--gutter) * 0.5);
+    bottom: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
   }
 
   @media not (prefers-reduced-motion: reduce) {
