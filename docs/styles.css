@@ -427,7 +427,7 @@ body {
   border-radius: var(--_dialog-radius);
 
   &::backdrop {
-    background-color: rgb(0 0 0 / 15%);
+    background-color: rgb(0 0 0 / 25%);
   }
 
   @media not (prefers-reduced-motion: reduce) {
