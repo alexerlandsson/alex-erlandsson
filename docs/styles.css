@@ -1,4 +1,16 @@
 /* ======================
+   Font
+====================== */
+
+@font-face {
+  font-family: "Geist Pixel Square";
+  src: url("assets/font/GeistPixel-Square.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ======================
    Global variables
 ====================== */
 
@@ -7,7 +19,9 @@
 
   /* Base */
   --gutter: 1.5rem;
-  --font-family: ui-monospace, "Cascadia Code", "Source Code Pro", menlo, consolas, "DejaVu Sans Mono", monospace;
+  --font-family:
+    "Geist Pixel Square", ui-monospace, "Cascadia Code", "Source Code Pro", menlo, consolas, "DejaVu Sans Mono",
+    monospace;
 
   /* Colors */
   --color-bg: #e9e6e2;
@@ -779,7 +793,7 @@ body {
   margin: 0;
   color: var(--color-speak-bubble-fg);
   text-align: center;
-  font-size: calc(var(--canvas-base-unit) * 0.75);
+  font-size: calc(var(--canvas-base-unit) * 0.875);
 }
 
 /* ======================
