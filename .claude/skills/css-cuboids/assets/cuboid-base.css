@@ -1,0 +1,142 @@
+/* ======================
+   CSS Cuboids Base
+   Copy this file as foundation for any voxel/cuboid project
+====================== */
+
+/* ======================
+   Scene Container
+====================== */
+
+.scene {
+  /* Base unit - all measurements are multiples of this */
+  --canvas-base-unit: 1rem;
+
+  /* Canvas dimensions in grid units */
+  --canvas-width: 10;
+  --canvas-height: 10;
+  --canvas-depth: 10;
+
+  /* Calculated dimensions (don't modify) */
+  --_canvas-width: calc(var(--canvas-width) * var(--canvas-base-unit));
+  --_canvas-height: calc(var(--canvas-height) * var(--canvas-base-unit));
+  --_canvas-depth: calc(var(--canvas-depth) * var(--canvas-base-unit));
+
+  width: var(--_canvas-width);
+  height: var(--_canvas-height);
+  perspective: 32rem;
+}
+
+/* ======================
+   Canvas (3D Container)
+====================== */
+
+.canvas {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  /* Center the canvas on Z axis */
+  translate: 0 0 calc(var(--_canvas-depth) * -0.5);
+  margin: 0;
+}
+
+.canvas__description {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ======================
+   Cuboid Structure
+====================== */
+
+.cuboid,
+.cuboid__inner {
+  position: absolute;
+  transform-style: inherit;
+  width: var(--_w);
+  height: var(--_h);
+  background-color: var(--_c);
+}
+
+.cuboid::before,
+.cuboid::after,
+.cuboid__inner::before,
+.cuboid__inner::after {
+  content: "";
+  position: absolute;
+  background-color: inherit;
+}
+
+/* ======================
+   Cuboid Positioning
+====================== */
+
+.cuboid {
+  /* Custom properties for positioning (set per-cuboid) */
+  --_w: calc(var(--w, 1) * var(--canvas-base-unit));
+  --_h: calc(var(--h, 1) * var(--canvas-base-unit));
+  --_d: calc(var(--d, 1) * var(--canvas-base-unit));
+  --_x: calc(var(--x, 0) * var(--canvas-base-unit));
+  --_y: calc(var(--y, 0) * var(--canvas-base-unit));
+  --_z: calc(var(--z, 0) * var(--canvas-base-unit));
+  --_c: var(--c);
+
+  /* Position in 3D space - this is the BACK face */
+  transform: translate3d(
+    var(--_x),
+    var(--_y),
+    calc(var(--_canvas-depth) * 0.5 - var(--_z) - var(--_d))
+  );
+}
+
+/* ======================
+   Cuboid Faces
+====================== */
+
+/* Left & Right faces (pseudo-elements on .cuboid) */
+.cuboid::before,
+.cuboid::after {
+  width: var(--_d);
+  height: var(--_h);
+  left: calc(var(--_w) * 0.5 - var(--_d) * 0.5);
+}
+
+/* Left face */
+.cuboid::before {
+  transform: rotateY(90deg) translateZ(calc(var(--_w) * 0.5)) translateX(-50%);
+}
+
+/* Right face */
+.cuboid::after {
+  transform: rotateY(-90deg) translateZ(calc(var(--_w) * 0.5)) translateX(50%);
+}
+
+/* Front face */
+.cuboid__inner {
+  transform: translateZ(var(--_d));
+}
+
+/* Top & Bottom faces (pseudo-elements on .cuboid__inner) */
+.cuboid__inner::before,
+.cuboid__inner::after {
+  width: var(--_w);
+  height: var(--_d);
+  top: calc(var(--_h) * 0.5 - var(--_d) * 0.5);
+}
+
+/* Top face */
+.cuboid__inner::before {
+  transform: rotateX(90deg) translateZ(calc(var(--_h) * 0.5)) translateY(-50%);
+}
+
+/* Bottom face */
+.cuboid__inner::after {
+  transform: rotateX(-90deg) translateZ(calc(var(--_h) * 0.5)) translateY(50%);
+}
