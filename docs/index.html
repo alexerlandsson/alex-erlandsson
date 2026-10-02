@@ -12,8 +12,8 @@
     />
     <meta name="author" content="Alexander Erlandsson" />
     <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="theme-color" content="#e9e6e2" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#000" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f2f0eb" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e0e0e" media="(prefers-color-scheme: dark)" />
 
     <link rel="icon" type="image/png" href="/assets/favicon/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.svg" />
@@ -38,165 +38,137 @@
     <meta name="twitter:image" content="https://alexerlandsson.com/assets/images/og-thumbnail.png" />
     <meta name="twitter:image:alt" content="3D representation of Alex Erlandsson" />
 
+    <link rel="preload" href="assets/font/FamiljenGrotesk-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="assets/font/GeistMono-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <div class="root">
-      <h1 class="sr-only">Alex Erlandsson</h1>
-      <main class="main" role="main">
-        <div class="scene">
-          <figure class="canvas" id="canvas" role="img">
-            <div class="cuboid avatar__hair avatar__hair--top" aria-hidden="true">
-              <span class="cuboid__inner"></span>
+      <header class="header">
+        <h1 class="header__name">Alex Erlandsson</h1>
+        <p class="header__place label">Gothenburg, Sweden</p>
+      </header>
+
+      <main class="main" id="main">
+        <section class="intro" aria-labelledby="intro-title">
+          <h2 class="intro__title" id="intro-title">
+            Front-end developer building accessible design systems, and pushing what CSS can do.
+          </h2>
+          <div class="about">
+            <h3 class="about__label label">About</h3>
+            <div class="about__columns">
+              <p class="about__paragraph">
+                I'm a front-end developer based in Gothenburg, Sweden, passionate about building scalable and accessible
+                design systems that empower teams to deliver consistent, inclusive user experiences.
+              </p>
+              <p class="about__paragraph">
+                With experience working on large projects at scale, I enjoy bridging the gap between design and
+                development: making interfaces that look great, feel intuitive, and work for everyone.
+              </p>
             </div>
-            <div class="cuboid avatar__hair avatar__hair--middle" aria-hidden="true">
-              <span class="cuboid__inner"></span>
-            </div>
-            <div class="cuboid avatar__hair avatar__hair--back" aria-hidden="true">
-              <span class="cuboid__inner"></span>
-            </div>
-            <div class="cuboid avatar__face avatar__face--front" aria-hidden="true">
-              <span class="cuboid__inner"></span>
-            </div>
-            <div class="cuboid avatar__face avatar__face--middle" aria-hidden="true">
-              <span class="cuboid__inner"></span>
-            </div>
-            <div class="cuboid avatar__face avatar__face--back" aria-hidden="true">
-              <span class="cuboid__inner"></span>
-            </div>
-            <div class="cuboid avatar__face avatar__face--nose" aria-hidden="true">
-              <span class="cuboid__inner"></span>
-            </div>
-            <div class="cuboid avatar__tshirt avatar__tshirt--body" aria-hidden="true">
-              <span class="cuboid__inner"></span>
-            </div>
-            <div class="cuboid avatar__tshirt avatar__tshirt--arm avatar__tshirt--arm-right" aria-hidden="true">
-              <span class="cuboid__inner"></span>
-            </div>
-            <div class="cuboid avatar__tshirt avatar__tshirt--arm avatar__tshirt--arm-left" aria-hidden="true">
-              <span class="cuboid__inner"></span>
-            </div>
-            <div class="cuboid avatar__arm avatar__arm--right" aria-hidden="true">
-              <span class="cuboid__inner"></span>
-            </div>
-            <div class="cuboid avatar__arm avatar__arm--left" aria-hidden="true">
-              <span class="cuboid__inner"></span>
-            </div>
-            <div class="cuboid avatar__trousers avatar__trousers--waist" aria-hidden="true">
-              <span class="cuboid__inner"></span>
-            </div>
-            <div class="cuboid avatar__trousers avatar__trousers--leg avatar__trousers--leg-right" aria-hidden="true">
-              <span class="cuboid__inner"></span>
-            </div>
-            <div class="cuboid avatar__trousers avatar__trousers--leg avatar__trousers--leg-left" aria-hidden="true">
-              <span class="cuboid__inner"></span>
-            </div>
-            <div class="cuboid avatar__shoes avatar__shoes--top avatar__shoes--right" aria-hidden="true">
-              <span class="cuboid__inner"></span>
-            </div>
-            <div class="cuboid avatar__shoes avatar__shoes--bottom avatar__shoes--right" aria-hidden="true">
-              <span class="cuboid__inner"></span>
-            </div>
-            <div class="cuboid avatar__shoes avatar__shoes--top avatar__shoes--left" aria-hidden="true">
-              <span class="cuboid__inner"></span>
-            </div>
-            <div class="cuboid avatar__shoes avatar__shoes--bottom avatar__shoes--left" aria-hidden="true">
-              <span class="cuboid__inner"></span>
-            </div>
-            <div class="cuboid avatar__speak-bubble avatar__speak-bubble--main">
-              <blockquote class="cuboid__inner avatar__speak-bubble--content">I love CSS</blockquote>
-            </div>
-            <div
-              class="cuboid avatar__speak-bubble avatar__speak-bubble--angle avatar__speak-bubble--angle-main"
-              aria-hidden="true"
-            >
-              <span class="cuboid__inner"></span>
-            </div>
-            <div
-              class="cuboid avatar__speak-bubble avatar__speak-bubble--angle avatar__speak-bubble--angle-alt"
-              aria-hidden="true"
-            >
-              <span class="cuboid__inner"></span>
-            </div>
-            <figcaption class="sr-only">
-              3D representation of Alex Erlandsson saying "I love CSS". Use mouse drag or arrow keys to rotate.
-            </figcaption>
-          </figure>
-        </div>
-        <dialog class="dialog" id="dialog-about" aria-labelledby="dialog-about-title">
-          <header class="dialog__header">
-            <h2 class="dialog__title" id="dialog-about-title">About</h2>
-            <button class="dialog__close" aria-label="Close dialog" title="Close dialog">
-              <span class="sr-only">Close dialog</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="dialog__close-icon"
-                aria-hidden="true"
-              >
-                <path d="M18 6 6 18" />
-                <path d="m6 6 12 12" />
-              </svg>
-            </button>
-          </header>
-          <div class="dialog__body" tabindex="-1">
-            <p class="dialog__paragraph">
-              I'm a front-end developer based in Gothenburg, Sweden, passionate about building scalable and accessible
-              design systems that empower teams to deliver consistent, inclusive user experiences.
-            </p>
-            <p class="dialog__paragraph">
-              With experience working on large projects at scale, I enjoy bridging the gap between design and
-              development — making interfaces that look great, feel intuitive, and work for everyone.
-            </p>
           </div>
-        </dialog>
+        </section>
+
+        <section class="figure" aria-label="Figure">
+          <p class="figure__label label" aria-hidden="true">Fig. 01</p>
+          <figure
+            class="scene"
+            id="scene"
+            role="img"
+            tabindex="0"
+            aria-label="3D voxel figure of Alex Erlandsson saying “I love CSS”. Drag, or use the arrow keys, to rotate it."
+          >
+            <div class="canvas" id="canvas" aria-hidden="true">
+              <div class="cuboid avatar__plinth">
+                <span class="cuboid__inner"></span>
+              </div>
+              <div class="cuboid avatar__hair avatar__hair--top">
+                <span class="cuboid__inner"></span>
+              </div>
+              <div class="cuboid avatar__hair avatar__hair--middle">
+                <span class="cuboid__inner"></span>
+              </div>
+              <div class="cuboid avatar__hair avatar__hair--back">
+                <span class="cuboid__inner"></span>
+              </div>
+              <div class="cuboid avatar__face avatar__face--front">
+                <span class="cuboid__inner"></span>
+              </div>
+              <div class="cuboid avatar__face avatar__face--middle">
+                <span class="cuboid__inner"></span>
+              </div>
+              <div class="cuboid avatar__face avatar__face--back">
+                <span class="cuboid__inner"></span>
+              </div>
+              <div class="cuboid avatar__face avatar__face--nose">
+                <span class="cuboid__inner"></span>
+              </div>
+              <div class="cuboid avatar__tshirt avatar__tshirt--body">
+                <span class="cuboid__inner"></span>
+              </div>
+              <div class="cuboid avatar__tshirt avatar__tshirt--arm avatar__tshirt--arm-right">
+                <span class="cuboid__inner"></span>
+              </div>
+              <div class="cuboid avatar__tshirt avatar__tshirt--arm avatar__tshirt--arm-left">
+                <span class="cuboid__inner"></span>
+              </div>
+              <div class="cuboid avatar__arm avatar__arm--right">
+                <span class="cuboid__inner"></span>
+              </div>
+              <div class="cuboid avatar__arm avatar__arm--left">
+                <span class="cuboid__inner"></span>
+              </div>
+              <div class="cuboid avatar__trousers avatar__trousers--waist">
+                <span class="cuboid__inner"></span>
+              </div>
+              <div class="cuboid avatar__trousers avatar__trousers--leg avatar__trousers--leg-right">
+                <span class="cuboid__inner"></span>
+              </div>
+              <div class="cuboid avatar__trousers avatar__trousers--leg avatar__trousers--leg-left">
+                <span class="cuboid__inner"></span>
+              </div>
+              <div class="cuboid avatar__shoes avatar__shoes--top avatar__shoes--right">
+                <span class="cuboid__inner"></span>
+              </div>
+              <div class="cuboid avatar__shoes avatar__shoes--bottom avatar__shoes--right">
+                <span class="cuboid__inner"></span>
+              </div>
+              <div class="cuboid avatar__shoes avatar__shoes--top avatar__shoes--left">
+                <span class="cuboid__inner"></span>
+              </div>
+              <div class="cuboid avatar__shoes avatar__shoes--bottom avatar__shoes--left">
+                <span class="cuboid__inner"></span>
+              </div>
+              <div class="cuboid avatar__speak-bubble avatar__speak-bubble--main">
+                <span class="cuboid__inner avatar__speak-bubble--content">I love CSS</span>
+              </div>
+              <div class="cuboid avatar__speak-bubble avatar__speak-bubble--angle avatar__speak-bubble--angle-main">
+                <span class="cuboid__inner"></span>
+              </div>
+              <div class="cuboid avatar__speak-bubble avatar__speak-bubble--angle avatar__speak-bubble--angle-alt">
+                <span class="cuboid__inner"></span>
+              </div>
+            </div>
+          </figure>
+        </section>
       </main>
-      <footer role="contentinfo" class="footer">
-        <nav class="footer__nav" aria-label="Social media links">
-          <ul class="footer__nav-list">
-            <li class="footer__nav-item">
-              <button
-                type="button"
-                class="footer__nav-action"
-                aria-label="Learn more about me"
-                title="Learn more about me"
-                id="button-about"
-              >
-                About
-              </button>
-            </li>
-            <li class="footer__nav-item">
-              <a href="mailto:contact@alexerlandsson.com" title="Send me an email" class="footer__nav-action">
-                Contact
-              </a>
-            </li>
-            <li class="footer__nav-item">
-              <a
-                href="https://github.com/alexerlandsson/"
-                title="Visit my profile on GitHub"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="footer__nav-action footer__nav-action--icon"
-              >
-                GitHub
+
+      <footer class="footer" role="contentinfo">
+        <nav class="footer__nav" aria-label="Contact and profiles">
+          <ul class="footer__list">
+            <li class="footer__item">
+              <a href="mailto:contact@alexerlandsson.com" class="link">
+                <span class="link__name">Email</span>
+                <span class="link__handle">contact@alexerlandsson.com</span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
                   stroke-width="2"
                   stroke-linecap="round"
                   stroke-linejoin="round"
-                  class="icon"
+                  class="icon link__icon"
                   aria-hidden="true"
                 >
                   <path d="M7 7h10v10" />
@@ -204,26 +176,19 @@
                 </svg>
               </a>
             </li>
-            <li class="footer__nav-item">
-              <a
-                href="https://codepen.io/alexerlandsson"
-                title="Visit my profile on CodePen"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="footer__nav-action footer__nav-action--icon"
-              >
-                CodePen
+            <li class="footer__item">
+              <a href="https://github.com/alexerlandsson/" target="_blank" rel="noopener noreferrer" class="link">
+                <span class="link__name">GitHub</span>
+                <span class="link__handle">@alexerlandsson</span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
                   stroke-width="2"
                   stroke-linecap="round"
                   stroke-linejoin="round"
-                  class="icon"
+                  class="icon link__icon"
                   aria-hidden="true"
                 >
                   <path d="M7 7h10v10" />
@@ -231,26 +196,44 @@
                 </svg>
               </a>
             </li>
-            <li class="footer__nav-item">
+            <li class="footer__item">
+              <a href="https://codepen.io/alexerlandsson" target="_blank" rel="noopener noreferrer" class="link">
+                <span class="link__name">CodePen</span>
+                <span class="link__handle">@alexerlandsson</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="icon link__icon"
+                  aria-hidden="true"
+                >
+                  <path d="M7 7h10v10" />
+                  <path d="M7 17 17 7" />
+                </svg>
+              </a>
+            </li>
+            <li class="footer__item">
               <a
                 href="https://se.linkedin.com/pub/alexander-erlandsson/55/8a5/159"
-                title="Visit my profile on LinkedIn"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="footer__nav-action footer__nav-action--icon"
+                class="link"
               >
-                LinkedIn
+                <span class="link__name">LinkedIn</span>
+                <span class="link__handle">alexander-erlandsson</span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
                   stroke-width="2"
                   stroke-linecap="round"
                   stroke-linejoin="round"
-                  class="icon"
+                  class="icon link__icon"
                   aria-hidden="true"
                 >
                   <path d="M7 7h10v10" />

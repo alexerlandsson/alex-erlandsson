@@ -1,182 +1,123 @@
 /**
  * 3D Model Rotation Controller
- * Handles mouse/touch drag rotation with momentum and keyboard controls
+ *
+ * Rotates the figure with pointer drag (with momentum) and arrow keys.
+ * Pointer events are scoped to the scene element, so text elsewhere on the
+ * page can still be selected. Arrow keys only act while the scene has focus,
+ * so page scrolling is never hijacked.
  */
 class ModelRotationController {
-  constructor(canvas, options = {}) {
+  constructor(scene, canvas, options = {}) {
+    this.scene = scene;
     this.canvas = canvas;
 
-    // Configuration
     this.config = {
-      rotationSensitivity: options.rotationSensitivity || 0.5,
-      keyRotationStep: options.keyRotationStep || 22.5,
-      friction: options.friction || 0.85,
-      momentumThreshold: options.momentumThreshold || 0.1,
-      scaleFactorX: options.scaleFactorX || 15,
-      scaleFactorY: options.scaleFactorY || 5,
+      rotationSensitivity: 0.5,
+      keyRotationStep: 22.5,
+      friction: 0.85,
+      momentumThreshold: 0.1,
+      scaleFactorX: 15,
+      scaleFactorY: 5,
+      initialYaw: -22,
+      initialPitch: 8,
+      onFirstInteraction: null,
       ...options,
     };
 
     // State
-    this.rotation = { x: 0, y: 0 };
+    this.yaw = this.config.initialYaw; // rotateY, driven by horizontal movement
+    this.pitch = this.config.initialPitch; // rotateX, driven by vertical movement
     this.isDragging = false;
-    this.isEnabled = true;
+    this.hasInteracted = false;
     this.previousPointer = { x: 0, y: 0 };
     this.momentum = { x: 0, y: 0 };
     this.lastDragTime = 0;
     this.animationFrameId = null;
+    this.reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-    // Bind methods to preserve context
-    this.handleDragStart = this.handleDragStart.bind(this);
-    this.handleDragMove = this.handleDragMove.bind(this);
-    this.handleDragEnd = this.handleDragEnd.bind(this);
+    this.handlePointerDown = this.handlePointerDown.bind(this);
+    this.handlePointerMove = this.handlePointerMove.bind(this);
+    this.handlePointerUp = this.handlePointerUp.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.applyMomentum = this.applyMomentum.bind(this);
 
     this.init();
   }
 
-  /**
-   * Initialize the controller
-   */
   init() {
-    this.setupEventListeners();
-    this.updateModelRotation();
+    this.scene.addEventListener("pointerdown", this.handlePointerDown);
+    this.scene.addEventListener("keydown", this.handleKeyDown);
+    this.render();
   }
 
   /**
-   * Set up all event listeners
+   * The first interaction ends the intro animation and hides the hint.
    */
-  setupEventListeners() {
-    // Pointer events (modern browsers)
-    if (window.PointerEvent) {
-      document.addEventListener("pointerdown", this.handleDragStart);
-    } else {
-      // Fallback for older browsers
-      document.addEventListener("mousedown", this.handleDragStart);
-      document.addEventListener("touchstart", this.handleTouchStart);
-    }
+  markInteracted() {
+    if (this.hasInteracted) return;
+    this.hasInteracted = true;
+    this.canvas.classList.add("canvas--settled");
 
-    // Keyboard controls
-    document.addEventListener("keydown", this.handleKeyDown);
-  }
-
-  /**
-   * Handle touch start events (fallback)
-   */
-  handleTouchStart(event) {
-    if (event.touches.length > 0) {
-      event.preventDefault();
-      this.handleDragStart({
-        clientX: event.touches[0].clientX,
-        clientY: event.touches[0].clientY,
-      });
+    if (typeof this.config.onFirstInteraction === "function") {
+      this.config.onFirstInteraction();
     }
   }
 
-  /**
-   * Start dragging interaction
-   */
-  handleDragStart(event) {
-    if (!this.isEnabled) return;
+  handlePointerDown(event) {
+    if (event.pointerType === "mouse" && event.button !== 0) return;
 
+    event.preventDefault();
+    this.scene.focus({ preventScroll: true });
+    this.scene.setPointerCapture(event.pointerId);
     this.stopMomentum();
+    this.markInteracted();
 
     this.isDragging = true;
     this.previousPointer = { x: event.clientX, y: event.clientY };
-    this.lastDragTime = Date.now();
+    this.lastDragTime = event.timeStamp;
     this.momentum = { x: 0, y: 0 };
 
-    this.addDragEventListeners();
+    this.scene.addEventListener("pointermove", this.handlePointerMove);
+    this.scene.addEventListener("pointerup", this.handlePointerUp);
+    this.scene.addEventListener("pointercancel", this.handlePointerUp);
   }
 
-  /**
-   * Add event listeners for drag movement and end
-   */
-  addDragEventListeners() {
-    if (window.PointerEvent) {
-      document.addEventListener("pointermove", this.handleDragMove);
-      document.addEventListener("pointerup", this.handleDragEnd);
-    } else {
-      document.addEventListener("mousemove", this.handleDragMove);
-      document.addEventListener("mouseup", this.handleDragEnd);
-      document.addEventListener("touchmove", this.handleDragMove);
-      document.addEventListener("touchend", this.handleDragEnd);
-    }
-  }
-
-  /**
-   * Remove drag event listeners
-   */
-  removeDragEventListeners() {
-    if (window.PointerEvent) {
-      document.removeEventListener("pointermove", this.handleDragMove);
-      document.removeEventListener("pointerup", this.handleDragEnd);
-    } else {
-      document.removeEventListener("mousemove", this.handleDragMove);
-      document.removeEventListener("mouseup", this.handleDragEnd);
-      document.removeEventListener("touchmove", this.handleDragMove);
-      document.removeEventListener("touchend", this.handleDragEnd);
-    }
-  }
-
-  /**
-   * Handle drag movement
-   */
-  handleDragMove(event) {
+  handlePointerMove(event) {
     if (!this.isDragging) return;
 
-    let currentX, currentY;
-    const currentTime = Date.now();
-    const elapsed = currentTime - this.lastDragTime;
+    const elapsed = event.timeStamp - this.lastDragTime;
+    const deltaX = event.clientX - this.previousPointer.x;
+    const deltaY = event.clientY - this.previousPointer.y;
 
-    // Get current coordinates
-    if (event.type === "touchmove") {
-      event.preventDefault();
-      currentX = event.touches[0].clientX;
-      currentY = event.touches[0].clientY;
-    } else {
-      currentX = event.clientX;
-      currentY = event.clientY;
-    }
-
-    // Calculate movement delta
-    const deltaX = currentX - this.previousPointer.x;
-    const deltaY = currentY - this.previousPointer.y;
-
-    // Calculate momentum
     if (elapsed > 0) {
       this.momentum.x = (deltaX / elapsed) * this.config.scaleFactorX;
       this.momentum.y = (-deltaY / elapsed) * this.config.scaleFactorY;
     }
 
-    // Update rotation
-    this.rotation.x += deltaX * this.config.rotationSensitivity;
-    this.rotation.y -= deltaY * this.config.rotationSensitivity;
+    this.yaw += deltaX * this.config.rotationSensitivity;
+    this.pitch -= deltaY * this.config.rotationSensitivity;
+    this.render();
 
-    this.updateModelRotation();
-
-    // Update state for next iteration
-    this.previousPointer = { x: currentX, y: currentY };
-    this.lastDragTime = currentTime;
+    this.previousPointer = { x: event.clientX, y: event.clientY };
+    this.lastDragTime = event.timeStamp;
   }
 
-  /**
-   * End dragging interaction
-   */
-  handleDragEnd() {
+  handlePointerUp(event) {
     this.isDragging = false;
-    this.removeDragEventListeners();
 
-    // Start momentum animation if significant
-    if (this.hasSignificantMomentum()) {
+    if (this.scene.hasPointerCapture(event.pointerId)) {
+      this.scene.releasePointerCapture(event.pointerId);
+    }
+
+    this.scene.removeEventListener("pointermove", this.handlePointerMove);
+    this.scene.removeEventListener("pointerup", this.handlePointerUp);
+    this.scene.removeEventListener("pointercancel", this.handlePointerUp);
+
+    if (!this.reducedMotion.matches && this.hasSignificantMomentum()) {
       this.startMomentum();
     }
   }
 
-  /**
-   * Check if momentum is significant enough to continue animation
-   */
   hasSignificantMomentum() {
     return (
       Math.abs(this.momentum.x) > this.config.momentumThreshold ||
@@ -184,16 +125,10 @@ class ModelRotationController {
     );
   }
 
-  /**
-   * Start momentum animation
-   */
   startMomentum() {
     this.animationFrameId = requestAnimationFrame(this.applyMomentum);
   }
 
-  /**
-   * Stop momentum animation
-   */
   stopMomentum() {
     if (this.animationFrameId !== null) {
       cancelAnimationFrame(this.animationFrameId);
@@ -201,173 +136,75 @@ class ModelRotationController {
     }
   }
 
-  /**
-   * Apply momentum and gradually slow down
-   */
   applyMomentum() {
     if (!this.hasSignificantMomentum()) {
       this.animationFrameId = null;
       return;
     }
 
-    // Apply momentum to rotation
-    this.rotation.x += this.momentum.x;
-    this.rotation.y += this.momentum.y;
-
-    // Apply friction
+    this.yaw += this.momentum.x;
+    this.pitch += this.momentum.y;
     this.momentum.x *= this.config.friction;
     this.momentum.y *= this.config.friction;
 
-    this.updateModelRotation();
+    this.render();
     this.animationFrameId = requestAnimationFrame(this.applyMomentum);
   }
 
-  /**
-   * Handle keyboard controls
-   */
   handleKeyDown(event) {
-    if (!this.isEnabled) return;
-
+    const step = this.config.keyRotationStep;
     const keyActions = {
-      ArrowUp: () => (this.rotation.y += this.config.keyRotationStep),
-      ArrowDown: () => (this.rotation.y -= this.config.keyRotationStep),
-      ArrowLeft: () => (this.rotation.x -= this.config.keyRotationStep),
-      ArrowRight: () => (this.rotation.x += this.config.keyRotationStep),
+      ArrowUp: () => (this.pitch += step),
+      ArrowDown: () => (this.pitch -= step),
+      ArrowLeft: () => (this.yaw -= step),
+      ArrowRight: () => (this.yaw += step),
     };
 
     const action = keyActions[event.key];
-    if (action) {
-      action();
-      this.updateModelRotation();
-    }
-  }
+    if (!action) return;
 
-  /**
-   * Enable drag controls
-   */
-  enable() {
-    this.isEnabled = true;
-  }
-
-  /**
-   * Disable drag controls
-   */
-  disable() {
-    this.isEnabled = false;
+    event.preventDefault();
     this.stopMomentum();
+    this.markInteracted();
+    action();
+    this.render();
   }
 
   /**
-   * Update the model's visual rotation
+   * Write the rotation as custom properties. The stylesheet composes the
+   * transform from them, which lets the CSS intro animation start from the
+   * same pose the controller ends up at.
    */
-  updateModelRotation() {
-    this.canvas.style.transform = `rotateX(${this.rotation.y}deg) rotateY(${this.rotation.x}deg)`;
+  render() {
+    this.canvas.style.setProperty("--yaw", `${this.yaw}deg`);
+    this.canvas.style.setProperty("--pitch", `${this.pitch}deg`);
   }
 
-  /**
-   * Reset rotation to initial state
-   */
   resetRotation() {
-    this.rotation = { x: 0, y: 0 };
+    this.yaw = this.config.initialYaw;
+    this.pitch = this.config.initialPitch;
     this.stopMomentum();
-    this.updateModelRotation();
+    this.render();
   }
 
-  /**
-   * Get current rotation values
-   */
-  getRotation() {
-    return { ...this.rotation };
-  }
-
-  /**
-   * Set rotation values
-   */
-  setRotation(x, y) {
-    this.rotation = { x, y };
-    this.updateModelRotation();
-  }
-
-  /**
-   * Clean up event listeners
-   */
   destroy() {
     this.stopMomentum();
-    this.removeDragEventListeners();
-    document.removeEventListener("keydown", this.handleKeyDown);
+    this.scene.removeEventListener("pointerdown", this.handlePointerDown);
+    this.scene.removeEventListener("keydown", this.handleKeyDown);
+    this.scene.removeEventListener("pointermove", this.handlePointerMove);
+    this.scene.removeEventListener("pointerup", this.handlePointerUp);
+    this.scene.removeEventListener("pointercancel", this.handlePointerUp);
   }
 }
 
-/**
- * Close a dialog with animation
- * Adds closing class, waits for animation, then closes
- */
-function closeDialogWithAnimation(dialog) {
-  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  if (prefersReducedMotion) {
-    dialog.close();
-    return;
-  }
-
-  dialog.classList.add("dialog--closing");
-
-  dialog.addEventListener(
-    "animationend",
-    () => {
-      dialog.classList.remove("dialog--closing");
-      dialog.close();
-    },
-    { once: true }
-  );
-}
-
-// Initialize when DOM is ready
 document.addEventListener("DOMContentLoaded", () => {
+  const scene = document.getElementById("scene");
   const canvas = document.getElementById("canvas");
 
-  if (!canvas) {
-    console.error("Canvas element not found");
+  if (!scene || !canvas) {
+    console.error("Scene or canvas element not found");
     return;
   }
 
-  // Create and initialize the rotation controller
-  const rotationController = new ModelRotationController(canvas);
-
-  // Dialog functionality
-  const aboutButton = document.getElementById("button-about");
-  const dialog = document.getElementById("dialog-about");
-  const closeButton = dialog?.querySelector(".dialog__close");
-  const dialogBody = dialog?.querySelector(".dialog__body");
-
-  if (aboutButton && dialog) {
-    aboutButton.addEventListener("click", () => {
-      rotationController.disable();
-      dialog.showModal();
-      dialogBody?.focus();
-    });
-
-    dialog.addEventListener("close", () => {
-      rotationController.enable();
-    });
-
-    // Handle Escape key with animation
-    dialog.addEventListener("cancel", (event) => {
-      event.preventDefault();
-      closeDialogWithAnimation(dialog);
-    });
-
-    // Handle backdrop click
-    dialog.addEventListener("click", (event) => {
-      if (event.target === dialog) {
-        closeDialogWithAnimation(dialog);
-      }
-    });
-  }
-
-  if (closeButton && dialog) {
-    closeButton.addEventListener("click", () => {
-      closeDialogWithAnimation(dialog);
-    });
-  }
+  new ModelRotationController(scene, canvas);
 });
